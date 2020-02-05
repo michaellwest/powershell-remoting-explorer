@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\NaosWinRmBaseException.cs" />
+    <Compile Include="Exceptions\BaseException.cs" />
     <Compile Include="Exceptions\RemoteExecutionException.cs" />
     <Compile Include="Exceptions\TrustedHostMissingException.cs" />
     <Compile Include="Form1.cs">

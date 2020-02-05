@@ -4,18 +4,17 @@ using System.Runtime.Serialization;
 namespace PSRemotingExplorer.Exceptions
 {
     [Serializable]
-    public class RemoteExecutionException : NaosWinRmBaseException
+    public class RemoteExecutionException : BaseException
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteExecutionException"/> class.
+        ///     Initializes a new instance of the <see cref="RemoteExecutionException" /> class.
         /// </summary>
         public RemoteExecutionException()
-            : base()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteExecutionException"/> class.
+        ///     Initializes a new instance of the <see cref="RemoteExecutionException" /> class.
         /// </summary>
         /// <param name="message">Exception message.</param>
         public RemoteExecutionException(string message)
@@ -24,7 +23,7 @@ namespace PSRemotingExplorer.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteExecutionException"/> class.
+        ///     Initializes a new instance of the <see cref="RemoteExecutionException" /> class.
         /// </summary>
         /// <param name="message">Exception message.</param>
         /// <param name="innerException">Inner exception.</param>
@@ -34,7 +33,7 @@ namespace PSRemotingExplorer.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteExecutionException"/> class.
+        ///     Initializes a new instance of the <see cref="RemoteExecutionException" /> class.
         /// </summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Reading context.</param>
