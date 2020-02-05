@@ -21,6 +21,8 @@ namespace PSRemotingExplorer
 
         void RemoveFileFromSession(string filePathOnTargetMachine);
 
+        void ExtractFileFromSession(string filePathOnTargetMachine, string folderPathOnTargetMachine);
+
         ICollection<PSObject> RunScript(string scriptBlock, ICollection<object> scriptBlockParameters = null);
     }
 }

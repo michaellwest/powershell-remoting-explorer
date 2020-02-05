@@ -11,14 +11,14 @@ namespace PSRemotingExplorer
     //https://stackoverflow.com/questions/37791149/c-sharp-show-file-and-folder-icons-in-listview
     public partial class Form1 : Form
     {
-        private MachineManager _MachineManager;
+        private MachineManager _machineManager;
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void PopulateRemoteTreeView(string rootDirectory, string[] directories)
+        private void InitializeTreeView(string rootDirectory, List<string> directories)
         {
             trvDirectories.Nodes.Clear();
 
@@ -31,9 +31,16 @@ namespace PSRemotingExplorer
                 StateImageIndex = 0
             };
 
+            AddTreeNodes(rootNode, directories);
+
+            trvDirectories.Nodes.Add(rootNode);
+        }
+
+        private void AddTreeNodes(TreeNode rootNode, List<string> directories)
+        {
             foreach (var directory in directories)
             {
-                var directoryName = Path.GetDirectoryName($"{directory}\\");
+                var directoryName = new DirectoryInfo(directory).Name;
                 var childNode = new TreeNode(directoryName, 0, 0)
                 {
                     Tag = directory,
@@ -42,9 +49,6 @@ namespace PSRemotingExplorer
 
                 rootNode.Nodes.Add(childNode);
             }
-
-
-            trvDirectories.Nodes.Add(rootNode);
         }
 
         private void PopulateRemoteListView(string[] files)
@@ -64,32 +68,44 @@ namespace PSRemotingExplorer
             }
         }
 
-        private void LoadDirectories(string path)
+        private List<string> LoadDirectories(string path)
         {
-            var result = _MachineManager.RunScript(
-                "{ param($path) Get-ChildItem -Path $path -Directory | Select-Object -Expand FullName }", new[] {path});
+            var result = _machineManager.RunScript(
+                "{ param($path) Get-ChildItem -Path $path -Directory | Select-Object -Expand FullName }", new[] { path });
             var items = new List<string>();
             foreach (var item in result.ToArray()) items.Add(item.BaseObject.ToString());
-            PopulateRemoteTreeView("C:", items.ToArray());
+            return items;
         }
 
-        private void LoadFiles(string path)
+        private List<string> LoadFiles(string path)
         {
-            var result = _MachineManager.RunScript(
-                "{ param($path) Get-ChildItem -Path $path -File | Select-Object -Expand FullName }", new[] {path});
+            var result = _machineManager.RunScript(
+                "{ param($path) Get-ChildItem -Path $path -File | Select-Object -Expand FullName }", new[] { path });
             var items = new List<string>();
             foreach (var item in result.ToArray()) items.Add(item.BaseObject.ToString());
-            PopulateRemoteListView(items.ToArray());
+            return items;
+        }
+
+        private void RefreshFiles()
+        {
+            var directory = trvDirectories.SelectedNode.Tag.ToString();
+            var fileItems = LoadFiles(directory);
+            PopulateRemoteListView(fileItems.ToArray());
         }
 
         private void DownloadFile(string sourcePath, string destinationPath)
         {
-            _MachineManager.CopyFileFromSession(sourcePath, destinationPath);
+            _machineManager.CopyFileFromSession(sourcePath, destinationPath);
+        }
+
+        private void ExtractFile(string filePathOnTargetMachine, string folderPathOnTargetMachine)
+        {
+            _machineManager.ExtractFileFromSession(filePathOnTargetMachine, folderPathOnTargetMachine);
         }
 
         private void UploadFile(string sourcePath, string destinationPath)
         {
-            _MachineManager.CopyFileToSession(sourcePath, destinationPath);
+            _machineManager.CopyFileToSession(sourcePath, destinationPath);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -107,7 +123,7 @@ namespace PSRemotingExplorer
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (var file in files) PrepareUpload(file);
             }
         }
@@ -115,15 +131,25 @@ namespace PSRemotingExplorer
         private void trvDirectories_AfterSelect(object sender, TreeViewEventArgs e)
         {
             var directory = e.Node.Tag.ToString();
+            e.Node.Nodes.Clear();
+            var directoryItems = LoadDirectories(directory);
+            AddTreeNodes(e.Node, directoryItems);
 
-            LoadFiles(directory);
+            RefreshFiles();
         }
 
         private void lvFiles_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
+            {
                 if (lvFiles.FocusedItem.Bounds.Contains(e.Location))
+                {
+                    var fullname = lvFiles.SelectedItems[0].Tag.ToString();
+                    var extension = Path.GetExtension(fullname);
+                    ctxMenuSelected.Items["extractFileToolStripMenuItem"].Enabled = extension.Is(".zip");
                     ctxMenuSelected.Show(Cursor.Position);
+                }
+            }
         }
 
         private void downloadFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -144,18 +170,19 @@ namespace PSRemotingExplorer
             var username = txtUsername.Text;
             var password = txtPassword.Text;
 
-            _MachineManager = new MachineManager(computerName, port, username, password.ToSecureString(),
+            _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(),
                 AuthenticationMechanism.Basic);
-            _MachineManager.EnterSession();
+            _machineManager.EnterSession();
 
-            LoadDirectories(@"C:\");
+            var directoryItems = LoadDirectories(@"C:\");
+            InitializeTreeView("C:", directoryItems);
 
             lvFiles.AllowDrop = true;
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
-            if (_MachineManager != null) _MachineManager.ExitSession();
+            _machineManager?.ExitSession();
 
             lvFiles.Items.Clear();
             trvDirectories.Nodes.Clear();
@@ -177,8 +204,7 @@ namespace PSRemotingExplorer
             var destinationPath = trvDirectories.SelectedNode.Tag.ToString();
             UploadFile(sourcePath, destinationPath);
 
-            var directory = trvDirectories.SelectedNode.Tag.ToString();
-            LoadFiles(directory);
+            RefreshFiles();
         }
 
         private void uploadFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -192,10 +218,31 @@ namespace PSRemotingExplorer
         private void deleteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var fullname = lvFiles.SelectedItems[0].Tag.ToString();
-            _MachineManager.RemoveFileFromSession(fullname);
+            _machineManager.RemoveFileFromSession(fullname);
 
-            var directory = trvDirectories.SelectedNode.Tag.ToString();
-            LoadFiles(directory);
+            RefreshFiles();
+        }
+
+        private void extractFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fullname = lvFiles.SelectedItems[0].Tag.ToString();
+            if (!Path.HasExtension(fullname) || !Path.GetExtension(fullname).Is(".zip")) return;
+
+            var folderPath = Path.GetDirectoryName(fullname);
+            ExtractFile(fullname, folderPath);
+
+            RefreshFiles();
+        }
+
+        private void lvFiles_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var fullname = lvFiles.SelectedItems[0].Tag.ToString();
+                _machineManager.RemoveFileFromSession(fullname);
+
+                RefreshFiles();
+            }
         }
     }
 }

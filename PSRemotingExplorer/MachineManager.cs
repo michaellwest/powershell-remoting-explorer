@@ -11,13 +11,13 @@ namespace PSRemotingExplorer
 {
     public class MachineManager : IManageMachines
     {
-        private readonly SecureString password;
+        private readonly SecureString _password;
 
-        private readonly string username;
+        private readonly string _username;
 
-        private Runspace _Runspace;
+        private Runspace _runspace;
 
-        private object _Session;
+        private object _session;
 
         public MachineManager(string ipAddress, int port, string username, SecureString password,
             AuthenticationMechanism authentication)
@@ -26,27 +26,27 @@ namespace PSRemotingExplorer
             Port = port;
             Authentication = authentication;
 
-            this.username = username;
-            this.password = password;
+            this._username = username;
+            this._password = password;
         }
 
-        public string IpAddress { get; } = "127.0.0.1";
+        public string IpAddress { get; }
 
-        public int Port { get; } = 5985;
+        public int Port { get; }
 
-        public AuthenticationMechanism Authentication { get; } = AuthenticationMechanism.Default;
+        public AuthenticationMechanism Authentication { get; }
 
         public void EnterSession()
         {
-            _Runspace = RunspaceFactory.CreateRunspace();
-            _Runspace.Open();
+            _runspace = RunspaceFactory.CreateRunspace();
+            _runspace.Open();
 
-            var powershellCredentials = new PSCredential(username, password);
+            var powershellCredentials = new PSCredential(_username, _password);
 
             var sessionOptionsCommand = new Command("New-PSSessionOption");
             sessionOptionsCommand.Parameters.Add("OperationTimeout", 0);
             sessionOptionsCommand.Parameters.Add("IdleTimeout", TimeSpan.FromMinutes(20).TotalMilliseconds);
-            var sessionOptionsObject = RunLocalCommand(_Runspace, sessionOptionsCommand).Single().BaseObject;
+            var sessionOptionsObject = RunLocalCommand(_runspace, sessionOptionsCommand).Single().BaseObject;
 
             var sessionCommand = new Command("New-PSSession");
             sessionCommand.Parameters.Add("ComputerName", IpAddress);
@@ -54,16 +54,16 @@ namespace PSRemotingExplorer
             sessionCommand.Parameters.Add("Authentication", Authentication);
             sessionCommand.Parameters.Add("Credential", powershellCredentials);
             sessionCommand.Parameters.Add("SessionOption", sessionOptionsObject);
-            var sessionObject = RunLocalCommand(_Runspace, sessionCommand).Single().BaseObject;
-            _Session = sessionObject;
+            var sessionObject = RunLocalCommand(_runspace, sessionCommand).Single().BaseObject;
+            _session = sessionObject;
         }
 
         public void ExitSession()
         {
-            _Runspace.Close();
-            _Runspace.Dispose();
+            _runspace.Close();
+            _runspace.Dispose();
 
-            _Session = null;
+            _session = null;
         }
 
         public void CopyFileFromSession(string filePathOnTargetMachine, string filePathOnLocalMachine)
@@ -71,8 +71,8 @@ namespace PSRemotingExplorer
             var sessionCommand = new Command("Copy-Item");
             sessionCommand.Parameters.Add("Path", filePathOnTargetMachine);
             sessionCommand.Parameters.Add("Destination", filePathOnLocalMachine);
-            sessionCommand.Parameters.Add("FromSession", _Session);
-            RunLocalCommand(_Runspace, sessionCommand);
+            sessionCommand.Parameters.Add("FromSession", _session);
+            RunLocalCommand(_runspace, sessionCommand);
         }
 
         public void CopyFileToSession(string filePathOnTargetMachine, string filePathOnLocalMachine)
@@ -80,19 +80,25 @@ namespace PSRemotingExplorer
             var sessionCommand = new Command("Copy-Item");
             sessionCommand.Parameters.Add("Path", filePathOnTargetMachine);
             sessionCommand.Parameters.Add("Destination", filePathOnLocalMachine);
-            sessionCommand.Parameters.Add("ToSession", _Session);
-            RunLocalCommand(_Runspace, sessionCommand);
+            sessionCommand.Parameters.Add("ToSession", _session);
+            RunLocalCommand(_runspace, sessionCommand);
+        }
+
+        public void ExtractFileFromSession(string filePathOnTargetMachine, string folderPathOnTargetMachine)
+        {
+            const string script = "{ param($path,$destination) Expand-Archive -Path $path -Destination $destination -Force }";
+            RunScriptUsingSession(script, new[] {filePathOnTargetMachine, folderPathOnTargetMachine}, _runspace, _session);
         }
 
         public ICollection<PSObject> RunScript(string scriptBlock, ICollection<object> scriptBlockParameters = null)
         {
-            return RunScriptUsingSession(scriptBlock, scriptBlockParameters, _Runspace, _Session);
+            return RunScriptUsingSession(scriptBlock, scriptBlockParameters, _runspace, _session);
         }
 
         public void RemoveFileFromSession(string filePathOnTargetMachine)
         {
-            var script = "{ param($path) Remove-Item -Path $path}";
-            RunScriptUsingSession(script, new[] {filePathOnTargetMachine}, _Runspace, _Session);
+            const string script = "{ param($path) Remove-Item -Path $path}";
+            RunScriptUsingSession(script, new[] {filePathOnTargetMachine}, _runspace, _session);
         }
 
         private void ThrowOnError(PowerShell powershell, string attemptedScriptBlock)
@@ -110,7 +116,7 @@ namespace PSRemotingExplorer
                         _ =>
                             (_.ErrorDetails == null ? null : _.ErrorDetails + " at " + _.ScriptStackTrace)
                             ?? (_.Exception == null
-                                ? "Naos.WinRM: No error message available"
+                                ? "PSRemotingExplorer: No error message available"
                                 : _.Exception + " at " + _.ScriptStackTrace)));
                 throw new RemoteExecutionException(
                     "Failed to run script (" + attemptedScriptBlock + ") on " + ipAddress + " got errors: "
@@ -128,7 +134,7 @@ namespace PSRemotingExplorer
                 powershell.Streams.Progress.DataAdded += (sender, eventargs) =>
                 {
                     var progressRecords = (PSDataCollection<ProgressRecord>) sender;
-                    Console.WriteLine("Progress is {0} percent complete",
+                    Console.WriteLine(@"Progress is {0} percent complete",
                         progressRecords[eventargs.Index].PercentComplete);
                 };
 
@@ -156,8 +162,8 @@ namespace PSRemotingExplorer
                 // session will implicitly assume remote - if null then localhost...
                 if (sessionObject != null)
                 {
-                    var variableNameArgs = "scriptBlockArgs";
-                    var variableNameSession = "invokeCommandSession";
+                    const string variableNameArgs = "scriptBlockArgs";
+                    const string variableNameSession = "invokeCommandSession";
                     powershell.Runspace.SessionStateProxy.SetVariable(variableNameSession, sessionObject);
 
                     var argsAddIn = string.Empty;

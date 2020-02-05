@@ -17,5 +17,10 @@ namespace PSRemotingExplorer.Extensions
 
             return result;
         }
+
+        public static bool Is(this string value, string compare)
+        {
+            return string.Compare(value, compare, StringComparison.InvariantCultureIgnoreCase) == 0;
+        }
     }
 }

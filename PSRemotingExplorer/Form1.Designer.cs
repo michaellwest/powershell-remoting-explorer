@@ -45,6 +45,7 @@
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuDirectory = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -153,6 +154,7 @@
             this.lvFiles.Size = new System.Drawing.Size(456, 405);
             this.lvFiles.TabIndex = 0;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
+            this.lvFiles.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lvFiles_KeyUp);
             this.lvFiles.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseClick);
             this.lvFiles.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseUp);
             // 
@@ -166,9 +168,10 @@
             // 
             this.ctxMenuSelected.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.downloadFileToolStripMenuItem,
-            this.deleteFileToolStripMenuItem});
+            this.deleteFileToolStripMenuItem,
+            this.extractFileToolStripMenuItem});
             this.ctxMenuSelected.Name = "contextMenuStrip1";
-            this.ctxMenuSelected.Size = new System.Drawing.Size(148, 48);
+            this.ctxMenuSelected.Size = new System.Drawing.Size(148, 70);
             // 
             // downloadFileToolStripMenuItem
             // 
@@ -197,6 +200,13 @@
             this.uploadFileToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.uploadFileToolStripMenuItem.Text = "Upload File";
             this.uploadFileToolStripMenuItem.Click += new System.EventHandler(this.uploadFileToolStripMenuItem_Click);
+            // 
+            // extractFileToolStripMenuItem
+            // 
+            this.extractFileToolStripMenuItem.Name = "extractFileToolStripMenuItem";
+            this.extractFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.extractFileToolStripMenuItem.Text = "Extract file";
+            this.extractFileToolStripMenuItem.Click += new System.EventHandler(this.extractFileToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -236,6 +246,7 @@
         private System.Windows.Forms.ContextMenuStrip ctxMenuDirectory;
         private System.Windows.Forms.ToolStripMenuItem uploadFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extractFileToolStripMenuItem;
     }
 }
 
