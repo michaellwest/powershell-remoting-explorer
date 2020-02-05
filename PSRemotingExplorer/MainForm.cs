@@ -4,18 +4,27 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation.Runspaces;
 using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 using PSRemotingExplorer.Extensions;
 
 namespace PSRemotingExplorer
 {
     //https://stackoverflow.com/questions/37791149/c-sharp-show-file-and-folder-icons-in-listview
-    public partial class Form1 : Form
+    public partial class MainForm : MaterialForm
     {
+        private readonly MaterialSkinManager materialSkinManager;
+
         private MachineManager _machineManager;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
+
+            materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
         }
 
         private void InitializeTreeView(string rootDirectory, List<string> directories)
@@ -56,7 +65,7 @@ namespace PSRemotingExplorer
             lvFiles.Items.Clear();
             lvFiles.Columns.Clear();
             lvFiles.View = View.Details;
-            lvFiles.Columns.Add("Name", 500);
+            lvFiles.Columns.Add("Name", 480);
 
             foreach (var file in files)
             {
@@ -108,10 +117,12 @@ namespace PSRemotingExplorer
             _machineManager.CopyFileToSession(sourcePath, destinationPath);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             lvFiles.DragDrop += lvFiles_DragDrop;
             lvFiles.DragEnter += lvFiles_DragEnter;
+
+            this.btnDisconnect.Enabled = false;
         }
 
         private void lvFiles_DragEnter(object sender, DragEventArgs e)
@@ -178,6 +189,8 @@ namespace PSRemotingExplorer
             InitializeTreeView("C:", directoryItems);
 
             lvFiles.AllowDrop = true;
+            btnConnect.Enabled = false;
+            btnDisconnect.Enabled = true;
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)
@@ -188,6 +201,8 @@ namespace PSRemotingExplorer
             trvDirectories.Nodes.Clear();
 
             lvFiles.AllowDrop = false;
+            btnConnect.Enabled = true;
+            btnDisconnect.Enabled = false;
         }
 
         private void lvFiles_MouseUp(object sender, MouseEventArgs e)
