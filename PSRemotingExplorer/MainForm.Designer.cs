@@ -49,6 +49,9 @@ namespace PSRemotingExplorer
             this.ctxMenuDirectory = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPort = new MaterialSkin.Controls.MaterialLabel();
+            this.renameFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.ctxMenuSelected.SuspendLayout();
             this.ctxMenuDirectory.SuspendLayout();
             this.SuspendLayout();
@@ -209,29 +212,32 @@ namespace PSRemotingExplorer
             // 
             this.ctxMenuSelected.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.downloadFileToolStripMenuItem,
+            this.toolStripSeparator1,
             this.deleteFileToolStripMenuItem,
+            this.renameFileToolStripMenuItem,
+            this.toolStripSeparator2,
             this.extractFileToolStripMenuItem});
             this.ctxMenuSelected.Name = "contextMenuStrip1";
-            this.ctxMenuSelected.Size = new System.Drawing.Size(148, 70);
+            this.ctxMenuSelected.Size = new System.Drawing.Size(181, 126);
             // 
             // downloadFileToolStripMenuItem
             // 
             this.downloadFileToolStripMenuItem.Name = "downloadFileToolStripMenuItem";
-            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.downloadFileToolStripMenuItem.Text = "Download file";
             this.downloadFileToolStripMenuItem.Click += new System.EventHandler(this.downloadFileToolStripMenuItem_Click);
             // 
             // deleteFileToolStripMenuItem
             // 
             this.deleteFileToolStripMenuItem.Name = "deleteFileToolStripMenuItem";
-            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.deleteFileToolStripMenuItem.Text = "Delete file";
             this.deleteFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFileToolStripMenuItem_Click);
             // 
             // extractFileToolStripMenuItem
             // 
             this.extractFileToolStripMenuItem.Name = "extractFileToolStripMenuItem";
-            this.extractFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.extractFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.extractFileToolStripMenuItem.Text = "Extract file";
             this.extractFileToolStripMenuItem.Click += new System.EventHandler(this.extractFileToolStripMenuItem_Click);
             // 
@@ -261,6 +267,23 @@ namespace PSRemotingExplorer
             this.lblPort.Size = new System.Drawing.Size(37, 19);
             this.lblPort.TabIndex = 3;
             this.lblPort.Text = "Port";
+            // 
+            // renameFileToolStripMenuItem
+            // 
+            this.renameFileToolStripMenuItem.Name = "renameFileToolStripMenuItem";
+            this.renameFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameFileToolStripMenuItem.Text = "Rename file";
+            this.renameFileToolStripMenuItem.Click += new System.EventHandler(this.renameFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // MainForm
             // 
@@ -306,6 +329,9 @@ namespace PSRemotingExplorer
         private System.Windows.Forms.ToolStripMenuItem extractFileToolStripMenuItem;
         private MaterialSkin.Controls.MaterialLabel lblComputerName;
         private MaterialLabel lblPort;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem renameFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 

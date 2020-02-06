@@ -84,6 +84,13 @@ namespace PSRemotingExplorer
             RunLocalCommand(_runspace, sessionCommand);
         }
 
+        public void RenameFileFromSession(string filePathOnTargetMachine, string newName)
+        {
+            const string script = "{ param($path,$newname) Rename-Item -Path $path -NewName $newname }";
+            RunScriptUsingSession(script, new[] {filePathOnTargetMachine, newName}, _runspace, _session);
+
+        }
+
         public void ExtractFileFromSession(string filePathOnTargetMachine, string folderPathOnTargetMachine)
         {
             const string script = "{ param($path,$destination) Expand-Archive -Path $path -Destination $destination -Force }";

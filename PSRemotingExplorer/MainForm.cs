@@ -6,6 +6,7 @@ using System.Management.Automation.Runspaces;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
+using Microsoft.VisualBasic;
 using PSRemotingExplorer.Extensions;
 
 namespace PSRemotingExplorer
@@ -257,7 +258,34 @@ namespace PSRemotingExplorer
                 _machineManager.RemoveFileFromSession(fullname);
 
                 RefreshFiles();
+            } 
+            else if (e.KeyCode == Keys.F2)
+            {
+                var fullname = lvFiles.SelectedItems[0].Tag.ToString();
+                var newname = Path.GetFileName(fullname);
+                var response = Interaction.InputBox("What is the new name?","Rename Item",newname);
+                if (string.IsNullOrEmpty(response)) return;
+
+                newname = response;
+            
+                _machineManager.RenameFileFromSession(fullname, newname);
+
+                RefreshFiles();
             }
+        }
+
+        private void renameFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fullname = lvFiles.SelectedItems[0].Tag.ToString();
+            var newname = Path.GetFileName(fullname);
+            var response = Interaction.InputBox("What is the new name?","Rename Item",newname);
+            if (string.IsNullOrEmpty(response)) return;
+
+            newname = response;
+            
+            _machineManager.RenameFileFromSession(fullname, newname);
+
+            RefreshFiles();
         }
     }
 }
