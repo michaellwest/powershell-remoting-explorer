@@ -9,8 +9,15 @@ using PSRemotingExplorer.Exceptions;
 
 namespace PSRemotingExplorer
 {
+    public class RemoteProgressChangedEventArgs : EventArgs
+    {
+        public int Progress { get; set; }
+    }
+
     public class MachineManager : IManageMachines
     {
+        public event EventHandler<RemoteProgressChangedEventArgs> ProgressChanged;
+
         private readonly SecureString _password;
 
         private readonly string _username;
@@ -131,7 +138,13 @@ namespace PSRemotingExplorer
             }
         }
 
-        private static List<PSObject> RunLocalCommand(Runspace runspace, Command arbitraryCommand)
+        protected virtual void OnProgressChanged(RemoteProgressChangedEventArgs e)
+        {
+            var handler = ProgressChanged;
+            handler?.Invoke(this, e);
+        }
+
+        private List<PSObject> RunLocalCommand(Runspace runspace, Command arbitraryCommand)
         {
             using (var powershell = PowerShell.Create())
             {
@@ -143,6 +156,11 @@ namespace PSRemotingExplorer
                     var progressRecords = (PSDataCollection<ProgressRecord>) sender;
                     Console.WriteLine(@"Progress is {0} percent complete",
                         progressRecords[eventargs.Index].PercentComplete);
+                    var progressArgs = new RemoteProgressChangedEventArgs
+                    {
+                        Progress = progressRecords[eventargs.Index].PercentComplete
+                    };
+                    OnProgressChanged(progressArgs);
                 };
 
                 var output = powershell.Invoke();

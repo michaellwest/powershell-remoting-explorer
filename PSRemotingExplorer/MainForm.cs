@@ -25,7 +25,8 @@ namespace PSRemotingExplorer
             Rename,
             Extract,
             RefreshFiles,
-            RefreshDirectories
+            RefreshDirectories,
+            ProgressChanged
         }
 
         public class BackgroundRequest
@@ -91,7 +92,7 @@ namespace PSRemotingExplorer
             }
             else
             {
-                worker.ReportProgress(0);
+                //worker.ReportProgress(0);
                 switch (request.Name)
                 {
                     case CommandName.Connect:
@@ -148,18 +149,25 @@ namespace PSRemotingExplorer
                         result = new BackgroundResult
                         {
                             Name = CommandName.RefreshFiles,
-                            Result = LoadFiles(request.Request[0].ToString())
+                            Result = LoadFilesCommand(request.Request[0].ToString())
                         };
                         break;
                     case CommandName.RefreshDirectories:
                         result = new BackgroundResult
                         {
                             Name = CommandName.RefreshDirectories,
-                            Result = LoadDirectories(request.Request[0].ToString())
+                            Result = LoadDirectoriesCommand(request.Request[0].ToString())
+                        };
+                        break;
+                    case CommandName.ProgressChanged:
+                        result = new BackgroundResult
+                        {
+                            Name = CommandName.ProgressChanged,
+                            Result = request.Request[0]
                         };
                         break;
                 }
-                worker.ReportProgress(100);
+                //worker.ReportProgress(100);
             }
 
             return result;
@@ -190,6 +198,8 @@ namespace PSRemotingExplorer
                 var result = e.Result as BackgroundResult;
                 if (result?.Name == CommandName.Connect)
                 {
+                    _machineManager.ProgressChanged += _machineManager_ProgressChanged;
+
                     var directoryItems = result.Result as List<string>;
                     InitializeTreeView("C:", directoryItems);
 
@@ -199,6 +209,8 @@ namespace PSRemotingExplorer
                 }
                 else if (result?.Name == CommandName.Disconnect)
                 {
+                    _machineManager.ProgressChanged -= _machineManager_ProgressChanged;
+
                     lvFiles.Items.Clear();
                     trvDirectories.Nodes.Clear();
 
@@ -233,6 +245,10 @@ namespace PSRemotingExplorer
                         Name = CommandName.RefreshFiles,
                         Request = new List<object> { this.trvDirectories.SelectedNode.Tag.ToString() }
                     });
+                }
+                else if (result?.Name == CommandName.ProgressChanged)
+                {
+                    this.materialProgressBar1.Value = int.Parse(result.Result.ToString());
                 }
             }
         }
@@ -294,7 +310,7 @@ namespace PSRemotingExplorer
             }
         }
 
-        private List<string> LoadDirectories(string path)
+        private List<string> LoadDirectoriesCommand(string path)
         {
             var result = _machineManager.RunScript(
                 "{ param($path) Get-ChildItem -Path $path -Directory | Select-Object -Expand FullName }", new[] { path });
@@ -303,7 +319,7 @@ namespace PSRemotingExplorer
             return items;
         }
 
-        private List<string> LoadFiles(string path)
+        private List<string> LoadFilesCommand(string path)
         {
             var result = _machineManager.RunScript(
                 "{ param($path) Get-ChildItem -Path $path -File | Select-Object -Expand FullName }", new[] { path });
@@ -405,12 +421,17 @@ namespace PSRemotingExplorer
 
         private List<string> GetDirectories()
         {
-            var directoryItems = LoadDirectories(@"C:\");
+            var directoryItems = LoadDirectoriesCommand(@"C:\");
             return directoryItems;
         }
         private void btnConnect_Click(object sender, EventArgs e)
         {
             backgroundWorker1.RunWorkerAsync(new BackgroundRequest { Name = CommandName.Connect });
+        }
+
+        private void _machineManager_ProgressChanged(object sender, RemoteProgressChangedEventArgs e)
+        {
+            backgroundWorker1.ReportProgress(e.Progress);
         }
 
         private void DisconnectCommand()
