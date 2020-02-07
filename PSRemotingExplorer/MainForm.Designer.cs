@@ -39,7 +39,6 @@ namespace PSRemotingExplorer
             this.txtPassword = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.txtUsername = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.txtPort = new MaterialSkin.Controls.MaterialSingleLineTextField();
-            this.lblComputerName = new MaterialSkin.Controls.MaterialLabel();
             this.txtComputerName = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.ctxMenuSelected = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -51,10 +50,12 @@ namespace PSRemotingExplorer
             this.extractFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuDirectory = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblPort = new MaterialSkin.Controls.MaterialLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.lblStatus = new MaterialSkin.Controls.MaterialLabel();
             this.materialProgressBar1 = new MaterialSkin.Controls.MaterialProgressBar();
+            this.cboDrives = new System.Windows.Forms.ComboBox();
+            this.rdbAuthSSO = new MaterialSkin.Controls.MaterialRadioButton();
+            this.rdbAuthBasic = new MaterialSkin.Controls.MaterialRadioButton();
+            this.rdbDefault = new MaterialSkin.Controls.MaterialRadioButton();
             this.ctxMenuSelected.SuspendLayout();
             this.ctxMenuDirectory.SuspendLayout();
             this.SuspendLayout();
@@ -124,7 +125,7 @@ namespace PSRemotingExplorer
             // 
             this.txtPassword.Depth = 0;
             this.txtPassword.Hint = "";
-            this.txtPassword.Location = new System.Drawing.Point(179, 125);
+            this.txtPassword.Location = new System.Drawing.Point(478, 103);
             this.txtPassword.MaxLength = 32767;
             this.txtPassword.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtPassword.Name = "txtPassword";
@@ -132,7 +133,7 @@ namespace PSRemotingExplorer
             this.txtPassword.SelectedText = "";
             this.txtPassword.SelectionLength = 0;
             this.txtPassword.SelectionStart = 0;
-            this.txtPassword.Size = new System.Drawing.Size(126, 23);
+            this.txtPassword.Size = new System.Drawing.Size(147, 23);
             this.txtPassword.TabIndex = 5;
             this.txtPassword.TabStop = false;
             this.txtPassword.Text = "Passw0rd";
@@ -142,7 +143,7 @@ namespace PSRemotingExplorer
             // 
             this.txtUsername.Depth = 0;
             this.txtUsername.Hint = "";
-            this.txtUsername.Location = new System.Drawing.Point(12, 125);
+            this.txtUsername.Location = new System.Drawing.Point(478, 74);
             this.txtUsername.MaxLength = 32767;
             this.txtUsername.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtUsername.Name = "txtUsername";
@@ -150,7 +151,7 @@ namespace PSRemotingExplorer
             this.txtUsername.SelectedText = "";
             this.txtUsername.SelectionLength = 0;
             this.txtUsername.SelectionStart = 0;
-            this.txtUsername.Size = new System.Drawing.Size(161, 23);
+            this.txtUsername.Size = new System.Drawing.Size(147, 23);
             this.txtUsername.TabIndex = 4;
             this.txtUsername.TabStop = false;
             this.txtUsername.Text = "User03";
@@ -160,7 +161,7 @@ namespace PSRemotingExplorer
             // 
             this.txtPort.Depth = 0;
             this.txtPort.Hint = "";
-            this.txtPort.Location = new System.Drawing.Point(179, 96);
+            this.txtPort.Location = new System.Drawing.Point(176, 74);
             this.txtPort.MaxLength = 32767;
             this.txtPort.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtPort.Name = "txtPort";
@@ -171,27 +172,14 @@ namespace PSRemotingExplorer
             this.txtPort.Size = new System.Drawing.Size(126, 23);
             this.txtPort.TabIndex = 2;
             this.txtPort.TabStop = false;
-            this.txtPort.Text = "55985";
+            this.txtPort.Text = "5985";
             this.txtPort.UseSystemPasswordChar = false;
-            // 
-            // lblComputerName
-            // 
-            this.lblComputerName.AutoSize = true;
-            this.lblComputerName.Depth = 0;
-            this.lblComputerName.Font = new System.Drawing.Font("Roboto", 11F);
-            this.lblComputerName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.lblComputerName.Location = new System.Drawing.Point(8, 74);
-            this.lblComputerName.MouseState = MaterialSkin.MouseState.HOVER;
-            this.lblComputerName.Name = "lblComputerName";
-            this.lblComputerName.Size = new System.Drawing.Size(119, 19);
-            this.lblComputerName.TabIndex = 2;
-            this.lblComputerName.Text = "Computer Name";
             // 
             // txtComputerName
             // 
             this.txtComputerName.Depth = 0;
             this.txtComputerName.Hint = "";
-            this.txtComputerName.Location = new System.Drawing.Point(12, 96);
+            this.txtComputerName.Location = new System.Drawing.Point(9, 74);
             this.txtComputerName.MaxLength = 32767;
             this.txtComputerName.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtComputerName.Name = "txtComputerName";
@@ -275,36 +263,10 @@ namespace PSRemotingExplorer
             this.uploadFileToolStripMenuItem.Text = "Upload File";
             this.uploadFileToolStripMenuItem.Click += new System.EventHandler(this.uploadFileToolStripMenuItem_Click);
             // 
-            // lblPort
-            // 
-            this.lblPort.AutoSize = true;
-            this.lblPort.Depth = 0;
-            this.lblPort.Font = new System.Drawing.Font("Roboto", 11F);
-            this.lblPort.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.lblPort.Location = new System.Drawing.Point(179, 74);
-            this.lblPort.MouseState = MaterialSkin.MouseState.HOVER;
-            this.lblPort.Name = "lblPort";
-            this.lblPort.Size = new System.Drawing.Size(37, 19);
-            this.lblPort.TabIndex = 3;
-            this.lblPort.Text = "Port";
-            // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
             this.backgroundWorker1.WorkerSupportsCancellation = true;
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Depth = 0;
-            this.lblStatus.Font = new System.Drawing.Font("Roboto", 11F);
-            this.lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.lblStatus.Location = new System.Drawing.Point(322, 121);
-            this.lblStatus.MouseState = MaterialSkin.MouseState.HOVER;
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(33, 19);
-            this.lblStatus.TabIndex = 7;
-            this.lblStatus.Text = "Idle";
             // 
             // materialProgressBar1
             // 
@@ -315,21 +277,83 @@ namespace PSRemotingExplorer
             this.materialProgressBar1.Size = new System.Drawing.Size(500, 5);
             this.materialProgressBar1.TabIndex = 8;
             // 
+            // cboDrives
+            // 
+            this.cboDrives.FormattingEnabled = true;
+            this.cboDrives.Location = new System.Drawing.Point(9, 103);
+            this.cboDrives.Name = "cboDrives";
+            this.cboDrives.Size = new System.Drawing.Size(121, 21);
+            this.cboDrives.TabIndex = 11;
+            this.cboDrives.SelectedIndexChanged += new System.EventHandler(this.cboDrives_SelectedIndexChanged);
+            // 
+            // rdbAuthSSO
+            // 
+            this.rdbAuthSSO.AutoSize = true;
+            this.rdbAuthSSO.Checked = true;
+            this.rdbAuthSSO.Depth = 0;
+            this.rdbAuthSSO.Font = new System.Drawing.Font("Roboto", 10F);
+            this.rdbAuthSSO.Location = new System.Drawing.Point(326, 73);
+            this.rdbAuthSSO.Margin = new System.Windows.Forms.Padding(0);
+            this.rdbAuthSSO.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.rdbAuthSSO.MouseState = MaterialSkin.MouseState.HOVER;
+            this.rdbAuthSSO.Name = "rdbAuthSSO";
+            this.rdbAuthSSO.Ripple = true;
+            this.rdbAuthSSO.Size = new System.Drawing.Size(118, 30);
+            this.rdbAuthSSO.TabIndex = 12;
+            this.rdbAuthSSO.TabStop = true;
+            this.rdbAuthSSO.Text = "Single Sign On";
+            this.rdbAuthSSO.UseVisualStyleBackColor = true;
+            // 
+            // rdbAuthBasic
+            // 
+            this.rdbAuthBasic.AutoSize = true;
+            this.rdbAuthBasic.Depth = 0;
+            this.rdbAuthBasic.Font = new System.Drawing.Font("Roboto", 10F);
+            this.rdbAuthBasic.Location = new System.Drawing.Point(326, 103);
+            this.rdbAuthBasic.Margin = new System.Windows.Forms.Padding(0);
+            this.rdbAuthBasic.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.rdbAuthBasic.MouseState = MaterialSkin.MouseState.HOVER;
+            this.rdbAuthBasic.Name = "rdbAuthBasic";
+            this.rdbAuthBasic.Ripple = true;
+            this.rdbAuthBasic.Size = new System.Drawing.Size(63, 30);
+            this.rdbAuthBasic.TabIndex = 14;
+            this.rdbAuthBasic.TabStop = true;
+            this.rdbAuthBasic.Text = "Basic";
+            this.rdbAuthBasic.UseVisualStyleBackColor = true;
+            // 
+            // rdbDefault
+            // 
+            this.rdbDefault.AutoSize = true;
+            this.rdbDefault.Depth = 0;
+            this.rdbDefault.Font = new System.Drawing.Font("Roboto", 10F);
+            this.rdbDefault.Location = new System.Drawing.Point(389, 103);
+            this.rdbDefault.Margin = new System.Windows.Forms.Padding(0);
+            this.rdbDefault.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.rdbDefault.MouseState = MaterialSkin.MouseState.HOVER;
+            this.rdbDefault.Name = "rdbDefault";
+            this.rdbDefault.Ripple = true;
+            this.rdbDefault.Size = new System.Drawing.Size(73, 30);
+            this.rdbDefault.TabIndex = 15;
+            this.rdbDefault.TabStop = true;
+            this.rdbDefault.Text = "Default";
+            this.rdbDefault.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 642);
+            this.Controls.Add(this.rdbDefault);
+            this.Controls.Add(this.rdbAuthBasic);
+            this.Controls.Add(this.rdbAuthSSO);
+            this.Controls.Add(this.cboDrives);
             this.Controls.Add(this.materialProgressBar1);
-            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.trvDirectories);
             this.Controls.Add(this.lvFiles);
             this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.lblPort);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUsername);
-            this.Controls.Add(this.lblComputerName);
             this.Controls.Add(this.txtPort);
             this.Controls.Add(this.txtComputerName);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -359,14 +383,15 @@ namespace PSRemotingExplorer
         private System.Windows.Forms.ToolStripMenuItem uploadFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extractFileToolStripMenuItem;
-        private MaterialSkin.Controls.MaterialLabel lblComputerName;
-        private MaterialLabel lblPort;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem renameFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private MaterialLabel lblStatus;
         private MaterialProgressBar materialProgressBar1;
+        private System.Windows.Forms.ComboBox cboDrives;
+        private MaterialRadioButton rdbAuthSSO;
+        private MaterialRadioButton rdbAuthBasic;
+        private MaterialRadioButton rdbDefault;
     }
 }
 

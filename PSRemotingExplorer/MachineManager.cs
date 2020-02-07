@@ -26,6 +26,8 @@ namespace PSRemotingExplorer
 
         private PSSession _session;
 
+        public MachineManager(string ipAddress, int port) : this(ipAddress, port, null, null, AuthenticationMechanism.NegotiateWithImplicitCredential) { }
+
         public MachineManager(string ipAddress, int port, string username, SecureString password,
             AuthenticationMechanism authentication)
         {
@@ -46,9 +48,7 @@ namespace PSRemotingExplorer
         public void EnterSession()
         {
             _runspace = RunspaceFactory.CreateRunspace();
-            _runspace.Open();
-
-            var powershellCredentials = new PSCredential(_username, _password);
+            _runspace.Open();            
 
             var sessionOptionsCommand = new Command("New-PSSessionOption");
             sessionOptionsCommand.Parameters.Add("OperationTimeout", 0);
@@ -59,7 +59,11 @@ namespace PSRemotingExplorer
             sessionCommand.Parameters.Add("ComputerName", IpAddress);
             sessionCommand.Parameters.Add("Port", Port);
             sessionCommand.Parameters.Add("Authentication", Authentication);
-            sessionCommand.Parameters.Add("Credential", powershellCredentials);
+            if (!string.IsNullOrEmpty(_username) && _password != null && !string.IsNullOrEmpty(_password.ToString()))
+            {
+                var powershellCredentials = new PSCredential(_username, _password);
+                sessionCommand.Parameters.Add("Credential", powershellCredentials);
+            }
             sessionCommand.Parameters.Add("SessionOption", sessionOptionsObject);
             var sessionObject = RunLocalCommand(_runspace, sessionCommand).Single().BaseObject;
             _session = (PSSession)sessionObject;

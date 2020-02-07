@@ -26,6 +26,7 @@ namespace PSRemotingExplorer
             Extract,
             RefreshFiles,
             RefreshDirectories,
+            RefreshDrives,
             ProgressChanged
         }
 
@@ -99,8 +100,7 @@ namespace PSRemotingExplorer
                         ConnectCommand();
                         result = new BackgroundResult
                         {
-                            Name = CommandName.Connect,
-                            Result = GetDirectories()
+                            Name = CommandName.Connect
                         };
                         break;
                     case CommandName.Disconnect:
@@ -159,6 +159,13 @@ namespace PSRemotingExplorer
                             Result = LoadDirectoriesCommand(request.Request[0].ToString())
                         };
                         break;
+                    case CommandName.RefreshDrives:
+                        result = new BackgroundResult
+                        {
+                            Name = CommandName.RefreshDrives,
+                            Result = LoadDrives()
+                        };
+                        break;
                     case CommandName.ProgressChanged:
                         result = new BackgroundResult
                         {
@@ -185,13 +192,6 @@ namespace PSRemotingExplorer
             }
             else if (e.Cancelled)
             {
-                // Next, handle the case where the user canceled 
-                // the operation.
-                // Note that due to a race condition in 
-                // the DoWork event handler, the Cancelled
-                // flag may not have been set, even though
-                // CancelAsync was called.
-                lblStatus.Text = "Canceled";
             }
             else
             {
@@ -200,8 +200,10 @@ namespace PSRemotingExplorer
                 {
                     _machineManager.ProgressChanged += _machineManager_ProgressChanged;
 
-                    var directoryItems = result.Result as List<string>;
-                    InitializeTreeView("C:", directoryItems);
+                    backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+                    {
+                        Name = CommandName.RefreshDrives
+                    });
 
                     lvFiles.AllowDrop = true;
                     btnConnect.Enabled = false;
@@ -213,14 +215,15 @@ namespace PSRemotingExplorer
 
                     lvFiles.Items.Clear();
                     trvDirectories.Nodes.Clear();
+                    cboDrives.Items.Clear();
 
                     lvFiles.AllowDrop = false;
                     btnConnect.Enabled = true;
                     btnDisconnect.Enabled = false;
                 }
-                else if (result?.Name == CommandName.Upload || 
-                         result?.Name == CommandName.Rename || 
-                         result?.Name == CommandName.Delete || 
+                else if (result?.Name == CommandName.Upload ||
+                         result?.Name == CommandName.Rename ||
+                         result?.Name == CommandName.Delete ||
                          result?.Name == CommandName.Extract)
                 {
                     var directory = trvDirectories.SelectedNode.Tag.ToString();
@@ -245,6 +248,13 @@ namespace PSRemotingExplorer
                         Name = CommandName.RefreshFiles,
                         Request = new List<object> { this.trvDirectories.SelectedNode.Tag.ToString() }
                     });
+                }
+                else if(result?.Name == CommandName.RefreshDrives)
+                {
+                    var driveItems = result.Result as List<string>;
+                    PopulateDrives(driveItems.ToArray());
+
+                    this.cboDrives.SelectedIndex = 0;                    
                 }
                 else if (result?.Name == CommandName.ProgressChanged)
                 {
@@ -276,6 +286,7 @@ namespace PSRemotingExplorer
             AddTreeNodes(rootNode, directories);
 
             trvDirectories.Nodes.Add(rootNode);
+            trvDirectories.SelectedNode = rootNode;
         }
 
         private void AddTreeNodes(TreeNode rootNode, List<string> directories)
@@ -310,6 +321,15 @@ namespace PSRemotingExplorer
             }
         }
 
+        private void PopulateDrives(string[] drives)
+        {
+            cboDrives.Items.Clear();
+            foreach(var drive in drives)
+            {
+                cboDrives.Items.Add(drive);
+            }
+        }
+
         private List<string> LoadDirectoriesCommand(string path)
         {
             var result = _machineManager.RunScript(
@@ -325,6 +345,18 @@ namespace PSRemotingExplorer
                 "{ param($path) Get-ChildItem -Path $path -File | Select-Object -Expand FullName }", new[] { path });
             var items = new List<string>();
             foreach (var item in result.ToArray()) items.Add(item.BaseObject.ToString());
+            return items;
+        }
+
+        private List<string> LoadDrives()
+        {
+            var result = _machineManager.RunScript(
+                "{ Get-Volume | Where-Object { $_.DriveType -eq 'Fixed' -and $_.DriveLetter } | Sort-Object -Property DriveLetter | Select-Object -Expand DriveLetter }");
+            var items = new List<string>();
+            foreach (var item in result.ToArray())
+            {
+                items.Add($"{item.BaseObject.ToString()}:\\");
+            }
             return items;
         }
 
@@ -413,20 +445,36 @@ namespace PSRemotingExplorer
             var port = int.Parse(txtPort.Text);
             var username = txtUsername.Text;
             var password = txtPassword.Text;
-
-            _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(),
-                AuthenticationMechanism.Basic);
+            if (rdbAuthBasic.Checked)
+            {
+                _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Basic);
+            }
+            else if (rdbAuthSSO.Checked)
+            {
+                _machineManager = new MachineManager(computerName, port);
+            }
+            else
+            {
+                _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Default);
+            }
             _machineManager.EnterSession();
         }
 
-        private List<string> GetDirectories()
+        private List<string> GetDirectories(string drive)
         {
-            var directoryItems = LoadDirectoriesCommand(@"C:\");
+            if (!drive.EndsWith(@"\"))
+            {
+                drive += @"\";
+            }
+            var directoryItems = LoadDirectoriesCommand(drive);
             return directoryItems;
         }
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            backgroundWorker1.RunWorkerAsync(new BackgroundRequest { Name = CommandName.Connect });
+            backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+            {
+                Name = CommandName.Connect
+            });
         }
 
         private void _machineManager_ProgressChanged(object sender, RemoteProgressChangedEventArgs e)
@@ -556,6 +604,14 @@ namespace PSRemotingExplorer
                 Name = CommandName.Rename,
                 Request = new List<object> { fullname, newname }
             });
+        }
+
+        private void cboDrives_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.trvDirectories.Nodes.Clear();
+            var drive = cboDrives.SelectedItem.ToString();
+
+            InitializeTreeView(drive, new List<string>());
         }
     }
 }
