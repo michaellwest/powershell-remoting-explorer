@@ -17,7 +17,7 @@ namespace PSRemotingExplorer
 
         private Runspace _runspace;
 
-        private object _session;
+        private PSSession _session;
 
         public MachineManager(string ipAddress, int port, string username, SecureString password,
             AuthenticationMechanism authentication)
@@ -55,7 +55,7 @@ namespace PSRemotingExplorer
             sessionCommand.Parameters.Add("Credential", powershellCredentials);
             sessionCommand.Parameters.Add("SessionOption", sessionOptionsObject);
             var sessionObject = RunLocalCommand(_runspace, sessionCommand).Single().BaseObject;
-            _session = sessionObject;
+            _session = (PSSession)sessionObject;
         }
 
         public void ExitSession()

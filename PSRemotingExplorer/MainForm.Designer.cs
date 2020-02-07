@@ -44,14 +44,17 @@ namespace PSRemotingExplorer
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.ctxMenuSelected = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.downloadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.extractFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuDirectory = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPort = new MaterialSkin.Controls.MaterialLabel();
-            this.renameFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.lblStatus = new MaterialSkin.Controls.MaterialLabel();
+            this.materialProgressBar1 = new MaterialSkin.Controls.MaterialProgressBar();
             this.ctxMenuSelected.SuspendLayout();
             this.ctxMenuDirectory.SuspendLayout();
             this.SuspendLayout();
@@ -218,26 +221,43 @@ namespace PSRemotingExplorer
             this.toolStripSeparator2,
             this.extractFileToolStripMenuItem});
             this.ctxMenuSelected.Name = "contextMenuStrip1";
-            this.ctxMenuSelected.Size = new System.Drawing.Size(181, 126);
+            this.ctxMenuSelected.Size = new System.Drawing.Size(148, 104);
             // 
             // downloadFileToolStripMenuItem
             // 
             this.downloadFileToolStripMenuItem.Name = "downloadFileToolStripMenuItem";
-            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.downloadFileToolStripMenuItem.Text = "Download file";
             this.downloadFileToolStripMenuItem.Click += new System.EventHandler(this.downloadFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(144, 6);
             // 
             // deleteFileToolStripMenuItem
             // 
             this.deleteFileToolStripMenuItem.Name = "deleteFileToolStripMenuItem";
-            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.deleteFileToolStripMenuItem.Text = "Delete file";
             this.deleteFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFileToolStripMenuItem_Click);
+            // 
+            // renameFileToolStripMenuItem
+            // 
+            this.renameFileToolStripMenuItem.Name = "renameFileToolStripMenuItem";
+            this.renameFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.renameFileToolStripMenuItem.Text = "Rename file";
+            this.renameFileToolStripMenuItem.Click += new System.EventHandler(this.renameFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(144, 6);
             // 
             // extractFileToolStripMenuItem
             // 
             this.extractFileToolStripMenuItem.Name = "extractFileToolStripMenuItem";
-            this.extractFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.extractFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.extractFileToolStripMenuItem.Text = "Extract file";
             this.extractFileToolStripMenuItem.Click += new System.EventHandler(this.extractFileToolStripMenuItem_Click);
             // 
@@ -268,28 +288,40 @@ namespace PSRemotingExplorer
             this.lblPort.TabIndex = 3;
             this.lblPort.Text = "Port";
             // 
-            // renameFileToolStripMenuItem
+            // backgroundWorker1
             // 
-            this.renameFileToolStripMenuItem.Name = "renameFileToolStripMenuItem";
-            this.renameFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.renameFileToolStripMenuItem.Text = "Rename file";
-            this.renameFileToolStripMenuItem.Click += new System.EventHandler(this.renameFileToolStripMenuItem_Click);
+            this.backgroundWorker1.WorkerReportsProgress = true;
+            this.backgroundWorker1.WorkerSupportsCancellation = true;
             // 
-            // toolStripSeparator1
+            // lblStatus
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Depth = 0;
+            this.lblStatus.Font = new System.Drawing.Font("Roboto", 11F);
+            this.lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.lblStatus.Location = new System.Drawing.Point(322, 121);
+            this.lblStatus.MouseState = MaterialSkin.MouseState.HOVER;
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(33, 19);
+            this.lblStatus.TabIndex = 7;
+            this.lblStatus.Text = "Idle";
             // 
-            // toolStripSeparator2
+            // materialProgressBar1
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.materialProgressBar1.Depth = 0;
+            this.materialProgressBar1.Location = new System.Drawing.Point(326, 143);
+            this.materialProgressBar1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialProgressBar1.Name = "materialProgressBar1";
+            this.materialProgressBar1.Size = new System.Drawing.Size(500, 5);
+            this.materialProgressBar1.TabIndex = 8;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 642);
+            this.Controls.Add(this.materialProgressBar1);
+            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.trvDirectories);
             this.Controls.Add(this.lvFiles);
             this.Controls.Add(this.btnDisconnect);
@@ -332,6 +364,9 @@ namespace PSRemotingExplorer
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem renameFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private MaterialLabel lblStatus;
+        private MaterialProgressBar materialProgressBar1;
     }
 }
 
