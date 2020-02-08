@@ -34,8 +34,7 @@ namespace PSRemotingExplorer
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.trvDirectories = new System.Windows.Forms.TreeView();
             this.lvFiles = new System.Windows.Forms.ListView();
-            this.btnDisconnect = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.btnConnect = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.btnConnection = new MaterialSkin.Controls.MaterialRaisedButton();
             this.txtPassword = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.txtUsername = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.txtPort = new MaterialSkin.Controls.MaterialSingleLineTextField();
@@ -58,6 +57,7 @@ namespace PSRemotingExplorer
             this.rdbDefault = new MaterialSkin.Controls.MaterialRadioButton();
             this.ctxDirectoryMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSaveConnection = new MaterialSkin.Controls.MaterialFlatButton();
             this.ctxFileMenu.SuspendLayout();
             this.ctxFileMenu2.SuspendLayout();
             this.ctxDirectoryMenu.SuspendLayout();
@@ -70,9 +70,9 @@ namespace PSRemotingExplorer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trvDirectories.Font = new System.Drawing.Font("Roboto", 10F);
             this.trvDirectories.HideSelection = false;
-            this.trvDirectories.Location = new System.Drawing.Point(12, 154);
+            this.trvDirectories.Location = new System.Drawing.Point(12, 184);
             this.trvDirectories.Name = "trvDirectories";
-            this.trvDirectories.Size = new System.Drawing.Size(312, 476);
+            this.trvDirectories.Size = new System.Drawing.Size(312, 492);
             this.trvDirectories.TabIndex = 0;
             this.trvDirectories.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvDirectories_AfterSelect);
             this.trvDirectories.KeyUp += new System.Windows.Forms.KeyEventHandler(this.trvDirectories_KeyUp);
@@ -84,56 +84,38 @@ namespace PSRemotingExplorer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lvFiles.Font = new System.Drawing.Font("Roboto", 10F);
             this.lvFiles.HideSelection = false;
-            this.lvFiles.Location = new System.Drawing.Point(326, 154);
+            this.lvFiles.Location = new System.Drawing.Point(326, 184);
             this.lvFiles.MultiSelect = false;
             this.lvFiles.Name = "lvFiles";
-            this.lvFiles.Size = new System.Drawing.Size(500, 476);
+            this.lvFiles.Size = new System.Drawing.Size(500, 492);
             this.lvFiles.TabIndex = 0;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lvFiles_KeyUp);
             this.lvFiles.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseClick);
             this.lvFiles.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lvFiles_MouseUp);
             // 
-            // btnDisconnect
+            // btnConnection
             // 
-            this.btnDisconnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDisconnect.AutoSize = true;
-            this.btnDisconnect.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnDisconnect.Depth = 0;
-            this.btnDisconnect.Icon = null;
-            this.btnDisconnect.Location = new System.Drawing.Point(721, 74);
-            this.btnDisconnect.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnDisconnect.Name = "btnDisconnect";
-            this.btnDisconnect.Primary = true;
-            this.btnDisconnect.Size = new System.Drawing.Size(105, 36);
-            this.btnDisconnect.TabIndex = 6;
-            this.btnDisconnect.Text = "Disconnect";
-            this.btnDisconnect.UseVisualStyleBackColor = true;
-            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
-            // 
-            // btnConnect
-            // 
-            this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnect.AutoSize = true;
-            this.btnConnect.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnConnect.Depth = 0;
-            this.btnConnect.Icon = null;
-            this.btnConnect.Location = new System.Drawing.Point(631, 74);
-            this.btnConnect.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Primary = true;
-            this.btnConnect.Size = new System.Drawing.Size(84, 36);
-            this.btnConnect.TabIndex = 3;
-            this.btnConnect.Text = "Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+            this.btnConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnConnection.AutoSize = true;
+            this.btnConnection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnConnection.Depth = 0;
+            this.btnConnection.Icon = null;
+            this.btnConnection.Location = new System.Drawing.Point(724, 70);
+            this.btnConnection.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnConnection.Name = "btnConnection";
+            this.btnConnection.Primary = true;
+            this.btnConnection.Size = new System.Drawing.Size(84, 36);
+            this.btnConnection.TabIndex = 3;
+            this.btnConnection.Text = "Connect";
+            this.btnConnection.UseVisualStyleBackColor = true;
+            this.btnConnection.Click += new System.EventHandler(this.btnConnection_Click);
             // 
             // txtPassword
             // 
-            this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPassword.Depth = 0;
-            this.txtPassword.Hint = "";
-            this.txtPassword.Location = new System.Drawing.Point(478, 103);
+            this.txtPassword.Hint = "Password";
+            this.txtPassword.Location = new System.Drawing.Point(140, 110);
             this.txtPassword.MaxLength = 32767;
             this.txtPassword.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtPassword.Name = "txtPassword";
@@ -144,15 +126,13 @@ namespace PSRemotingExplorer
             this.txtPassword.Size = new System.Drawing.Size(147, 23);
             this.txtPassword.TabIndex = 5;
             this.txtPassword.TabStop = false;
-            this.txtPassword.Text = "Passw0rd";
             this.txtPassword.UseSystemPasswordChar = true;
             // 
             // txtUsername
             // 
-            this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUsername.Depth = 0;
-            this.txtUsername.Hint = "";
-            this.txtUsername.Location = new System.Drawing.Point(478, 74);
+            this.txtUsername.Hint = "Username";
+            this.txtUsername.Location = new System.Drawing.Point(140, 79);
             this.txtUsername.MaxLength = 32767;
             this.txtUsername.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtUsername.Name = "txtUsername";
@@ -163,32 +143,31 @@ namespace PSRemotingExplorer
             this.txtUsername.Size = new System.Drawing.Size(147, 23);
             this.txtUsername.TabIndex = 4;
             this.txtUsername.TabStop = false;
-            this.txtUsername.Text = "User03";
             this.txtUsername.UseSystemPasswordChar = false;
             // 
             // txtPort
             // 
             this.txtPort.Depth = 0;
-            this.txtPort.Hint = "";
-            this.txtPort.Location = new System.Drawing.Point(176, 74);
-            this.txtPort.MaxLength = 32767;
+            this.txtPort.Hint = "Port";
+            this.txtPort.Location = new System.Drawing.Point(293, 109);
+            this.txtPort.MaxLength = 5;
             this.txtPort.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtPort.Name = "txtPort";
             this.txtPort.PasswordChar = '\0';
             this.txtPort.SelectedText = "";
             this.txtPort.SelectionLength = 0;
             this.txtPort.SelectionStart = 0;
-            this.txtPort.Size = new System.Drawing.Size(126, 23);
+            this.txtPort.Size = new System.Drawing.Size(97, 23);
             this.txtPort.TabIndex = 2;
             this.txtPort.TabStop = false;
-            this.txtPort.Text = "5985";
             this.txtPort.UseSystemPasswordChar = false;
+            this.txtPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPort_KeyPress);
             // 
             // txtComputerName
             // 
             this.txtComputerName.Depth = 0;
-            this.txtComputerName.Hint = "";
-            this.txtComputerName.Location = new System.Drawing.Point(9, 74);
+            this.txtComputerName.Hint = "ComputerName";
+            this.txtComputerName.Location = new System.Drawing.Point(293, 79);
             this.txtComputerName.MaxLength = 32767;
             this.txtComputerName.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtComputerName.Name = "txtComputerName";
@@ -199,7 +178,6 @@ namespace PSRemotingExplorer
             this.txtComputerName.Size = new System.Drawing.Size(161, 23);
             this.txtComputerName.TabIndex = 1;
             this.txtComputerName.TabStop = false;
-            this.txtComputerName.Text = "127.0.0.1";
             this.txtComputerName.UseSystemPasswordChar = false;
             // 
             // imageList1
@@ -282,17 +260,17 @@ namespace PSRemotingExplorer
             // 
             this.materialProgressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.materialProgressBar1.Depth = 0;
-            this.materialProgressBar1.Location = new System.Drawing.Point(326, 143);
+            this.materialProgressBar1.Location = new System.Drawing.Point(12, 173);
             this.materialProgressBar1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialProgressBar1.Name = "materialProgressBar1";
-            this.materialProgressBar1.Size = new System.Drawing.Size(500, 5);
+            this.materialProgressBar1.Size = new System.Drawing.Size(814, 5);
             this.materialProgressBar1.TabIndex = 8;
             // 
             // cboDrives
             // 
             this.cboDrives.Font = new System.Drawing.Font("Roboto", 10F);
             this.cboDrives.FormattingEnabled = true;
-            this.cboDrives.Location = new System.Drawing.Point(9, 103);
+            this.cboDrives.Location = new System.Drawing.Point(396, 108);
             this.cboDrives.Name = "cboDrives";
             this.cboDrives.Size = new System.Drawing.Size(58, 25);
             this.cboDrives.TabIndex = 11;
@@ -300,12 +278,10 @@ namespace PSRemotingExplorer
             // 
             // rdbAuthSSO
             // 
-            this.rdbAuthSSO.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.rdbAuthSSO.AutoSize = true;
-            this.rdbAuthSSO.Checked = true;
             this.rdbAuthSSO.Depth = 0;
             this.rdbAuthSSO.Font = new System.Drawing.Font("Roboto", 10F);
-            this.rdbAuthSSO.Location = new System.Drawing.Point(326, 73);
+            this.rdbAuthSSO.Location = new System.Drawing.Point(9, 73);
             this.rdbAuthSSO.Margin = new System.Windows.Forms.Padding(0);
             this.rdbAuthSSO.MouseLocation = new System.Drawing.Point(-1, -1);
             this.rdbAuthSSO.MouseState = MaterialSkin.MouseState.HOVER;
@@ -313,17 +289,16 @@ namespace PSRemotingExplorer
             this.rdbAuthSSO.Ripple = true;
             this.rdbAuthSSO.Size = new System.Drawing.Size(118, 30);
             this.rdbAuthSSO.TabIndex = 12;
-            this.rdbAuthSSO.TabStop = true;
             this.rdbAuthSSO.Text = "Single Sign On";
             this.rdbAuthSSO.UseVisualStyleBackColor = true;
             // 
             // rdbAuthBasic
             // 
-            this.rdbAuthBasic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.rdbAuthBasic.AutoSize = true;
+            this.rdbAuthBasic.Checked = true;
             this.rdbAuthBasic.Depth = 0;
             this.rdbAuthBasic.Font = new System.Drawing.Font("Roboto", 10F);
-            this.rdbAuthBasic.Location = new System.Drawing.Point(326, 103);
+            this.rdbAuthBasic.Location = new System.Drawing.Point(9, 103);
             this.rdbAuthBasic.Margin = new System.Windows.Forms.Padding(0);
             this.rdbAuthBasic.MouseLocation = new System.Drawing.Point(-1, -1);
             this.rdbAuthBasic.MouseState = MaterialSkin.MouseState.HOVER;
@@ -337,11 +312,10 @@ namespace PSRemotingExplorer
             // 
             // rdbDefault
             // 
-            this.rdbDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.rdbDefault.AutoSize = true;
             this.rdbDefault.Depth = 0;
             this.rdbDefault.Font = new System.Drawing.Font("Roboto", 10F);
-            this.rdbDefault.Location = new System.Drawing.Point(389, 103);
+            this.rdbDefault.Location = new System.Drawing.Point(9, 133);
             this.rdbDefault.Margin = new System.Windows.Forms.Padding(0);
             this.rdbDefault.MouseLocation = new System.Drawing.Point(-1, -1);
             this.rdbDefault.MouseState = MaterialSkin.MouseState.HOVER;
@@ -349,7 +323,6 @@ namespace PSRemotingExplorer
             this.rdbDefault.Ripple = true;
             this.rdbDefault.Size = new System.Drawing.Size(73, 30);
             this.rdbDefault.TabIndex = 15;
-            this.rdbDefault.TabStop = true;
             this.rdbDefault.Text = "Default";
             this.rdbDefault.UseVisualStyleBackColor = true;
             // 
@@ -368,11 +341,29 @@ namespace PSRemotingExplorer
             this.deleteDirectoryToolStripMenuItem.Text = "Delete";
             this.deleteDirectoryToolStripMenuItem.Click += new System.EventHandler(this.deleteDirectoryToolStripMenuItem_Click);
             // 
+            // btnSaveConnection
+            // 
+            this.btnSaveConnection.AutoSize = true;
+            this.btnSaveConnection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnSaveConnection.Depth = 0;
+            this.btnSaveConnection.Icon = null;
+            this.btnSaveConnection.Location = new System.Drawing.Point(310, 134);
+            this.btnSaveConnection.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.btnSaveConnection.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnSaveConnection.Name = "btnSaveConnection";
+            this.btnSaveConnection.Primary = false;
+            this.btnSaveConnection.Size = new System.Drawing.Size(145, 36);
+            this.btnSaveConnection.TabIndex = 17;
+            this.btnSaveConnection.Text = "Save Connection";
+            this.btnSaveConnection.UseVisualStyleBackColor = true;
+            this.btnSaveConnection.Click += new System.EventHandler(this.btnSaveConnection_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(838, 642);
+            this.ClientSize = new System.Drawing.Size(838, 688);
+            this.Controls.Add(this.btnSaveConnection);
             this.Controls.Add(this.rdbDefault);
             this.Controls.Add(this.rdbAuthBasic);
             this.Controls.Add(this.rdbAuthSSO);
@@ -380,8 +371,7 @@ namespace PSRemotingExplorer
             this.Controls.Add(this.materialProgressBar1);
             this.Controls.Add(this.trvDirectories);
             this.Controls.Add(this.lvFiles);
-            this.Controls.Add(this.btnDisconnect);
-            this.Controls.Add(this.btnConnect);
+            this.Controls.Add(this.btnConnection);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUsername);
             this.Controls.Add(this.txtPort);
@@ -406,10 +396,9 @@ namespace PSRemotingExplorer
         private System.Windows.Forms.ToolStripMenuItem downloadFileToolStripMenuItem;
         private MaterialSkin.Controls.MaterialSingleLineTextField txtComputerName;
         private MaterialSkin.Controls.MaterialSingleLineTextField txtPort;
-        private MaterialRaisedButton btnConnect;
+        private MaterialRaisedButton btnConnection;
         private MaterialSkin.Controls.MaterialSingleLineTextField txtUsername;
         private MaterialSkin.Controls.MaterialSingleLineTextField txtPassword;
-        private MaterialRaisedButton btnDisconnect;
         private System.Windows.Forms.ContextMenuStrip ctxFileMenu2;
         private System.Windows.Forms.ToolStripMenuItem uploadFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
@@ -425,6 +414,7 @@ namespace PSRemotingExplorer
         private MaterialRadioButton rdbDefault;
         private System.Windows.Forms.ContextMenuStrip ctxDirectoryMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteDirectoryToolStripMenuItem;
+        private MaterialFlatButton btnSaveConnection;
     }
 }
 

@@ -9,6 +9,7 @@ using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.VisualBasic;
 using PSRemotingExplorer.Extensions;
+using PSRemotingExplorer.Properties;
 
 namespace PSRemotingExplorer
 {
@@ -222,8 +223,7 @@ namespace PSRemotingExplorer
                     });
 
                     lvFiles.AllowDrop = true;
-                    btnConnect.Enabled = false;
-                    btnDisconnect.Enabled = true;
+                    btnConnection.Text = "Disconnect";
                 }
                 else if (result?.Name == CommandName.Disconnect)
                 {
@@ -234,8 +234,7 @@ namespace PSRemotingExplorer
                     cboDrives.Items.Clear();
 
                     lvFiles.AllowDrop = false;
-                    btnConnect.Enabled = true;
-                    btnDisconnect.Enabled = false;
+                    btnConnection.Text = "Connect";
                 }
                 else if (result?.Name == CommandName.Upload ||
                          result?.Name == CommandName.Rename ||
@@ -272,7 +271,7 @@ namespace PSRemotingExplorer
                         Request = new List<object> { this.trvDirectories.SelectedNode.Tag.ToString() }
                     });
                 }
-                else if(result?.Name == CommandName.RefreshDrives)
+                else if (result?.Name == CommandName.RefreshDrives)
                 {
                     var driveItems = result.Result as List<string>;
                     PopulateDrives(driveItems.ToArray());
@@ -350,7 +349,7 @@ namespace PSRemotingExplorer
         private void PopulateDrives(string[] drives)
         {
             cboDrives.Items.Clear();
-            foreach(var drive in drives)
+            foreach (var drive in drives)
             {
                 cboDrives.Items.Add(drive);
             }
@@ -361,7 +360,10 @@ namespace PSRemotingExplorer
             lvFiles.DragDrop += lvFiles_DragDrop;
             lvFiles.DragEnter += lvFiles_DragEnter;
 
-            this.btnDisconnect.Enabled = false;
+            txtUsername.Text = Connection.Default.Username;
+            txtPassword.Text = Connection.Default.Password.DecryptString().ToPlainString();
+            txtComputerName.Text = Connection.Default.ComputerName;
+            txtPort.Text = Connection.Default.Port.ToString();
         }
 
         private void lvFiles_DragEnter(object sender, DragEventArgs e)
@@ -424,22 +426,27 @@ namespace PSRemotingExplorer
             }
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private void btnConnection_Click(object sender, EventArgs e)
         {
-            backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+            if (btnConnection.Text == "Connect")
             {
-                Name = CommandName.Connect
-            });
+                backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+                {
+                    Name = CommandName.Connect
+                });
+            }
+            else
+            {
+                backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+                {
+                    Name = CommandName.Disconnect
+                });
+            }
         }
 
         private void _machineManager_ProgressChanged(object sender, RemoteProgressChangedEventArgs e)
         {
             backgroundWorker1.ReportProgress(e.Progress);
-        }
-
-        private void btnDisconnect_Click(object sender, EventArgs e)
-        {
-            backgroundWorker1.RunWorkerAsync(new BackgroundRequest { Name = CommandName.Disconnect });
         }
 
         private void lvFiles_MouseUp(object sender, MouseEventArgs e)
@@ -594,6 +601,37 @@ namespace PSRemotingExplorer
                     Name = CommandName.Rename,
                     Request = new List<object> { directory, newname }
                 });
+            }
+        }
+
+        private void btnSaveConnection_Click(object sender, EventArgs e)
+        {
+            if (rdbAuthBasic.Checked)
+            {
+                Connection.Default.Authentication = AuthenticationMechanism.Basic.ToString();
+            }
+            else if (rdbAuthSSO.Checked)
+            {
+                Connection.Default.Authentication = AuthenticationMechanism.NegotiateWithImplicitCredential.ToString();
+            }
+            else if (rdbDefault.Checked)
+            {
+                Connection.Default.Authentication = AuthenticationMechanism.Default.ToString();
+            }
+
+            Connection.Default.ComputerName = txtComputerName.Text;
+            Connection.Default.Port = int.Parse(txtPort.Text);
+            Connection.Default.Username = txtUsername.Text;
+            Connection.Default.Password = txtPassword.Text.ToSecureString().EncryptString();
+
+            Connection.Default.Save();
+        }
+
+        private void txtPort_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
             }
         }
     }
