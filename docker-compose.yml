@@ -1,0 +1,10 @@
+version: "2.4"
+
+services:
+  cm:
+    image: mcr.microsoft.com/windows/servercore:${WINDOWSSERVERCORE_VERSION}
+    entrypoint: powershell.exe -NoLogo -NoProfile -File C:\\startup\\startup.ps1
+    ports: 
+      - 55985:5985
+    volumes:
+      - .\startup:C:\startup

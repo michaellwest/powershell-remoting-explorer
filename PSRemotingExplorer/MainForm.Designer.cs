@@ -68,6 +68,7 @@ namespace PSRemotingExplorer
             this.trvDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.trvDirectories.Font = new System.Drawing.Font("Roboto", 10F);
             this.trvDirectories.HideSelection = false;
             this.trvDirectories.Location = new System.Drawing.Point(12, 154);
             this.trvDirectories.Name = "trvDirectories";
@@ -81,6 +82,7 @@ namespace PSRemotingExplorer
             // 
             this.lvFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvFiles.Font = new System.Drawing.Font("Roboto", 10F);
             this.lvFiles.HideSelection = false;
             this.lvFiles.Location = new System.Drawing.Point(326, 154);
             this.lvFiles.MultiSelect = false;
@@ -128,6 +130,7 @@ namespace PSRemotingExplorer
             // 
             // txtPassword
             // 
+            this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPassword.Depth = 0;
             this.txtPassword.Hint = "";
             this.txtPassword.Location = new System.Drawing.Point(478, 103);
@@ -146,6 +149,7 @@ namespace PSRemotingExplorer
             // 
             // txtUsername
             // 
+            this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUsername.Depth = 0;
             this.txtUsername.Hint = "";
             this.txtUsername.Location = new System.Drawing.Point(478, 74);
@@ -276,6 +280,7 @@ namespace PSRemotingExplorer
             // 
             // materialProgressBar1
             // 
+            this.materialProgressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.materialProgressBar1.Depth = 0;
             this.materialProgressBar1.Location = new System.Drawing.Point(326, 143);
             this.materialProgressBar1.MouseState = MaterialSkin.MouseState.HOVER;
@@ -285,15 +290,17 @@ namespace PSRemotingExplorer
             // 
             // cboDrives
             // 
+            this.cboDrives.Font = new System.Drawing.Font("Roboto", 10F);
             this.cboDrives.FormattingEnabled = true;
             this.cboDrives.Location = new System.Drawing.Point(9, 103);
             this.cboDrives.Name = "cboDrives";
-            this.cboDrives.Size = new System.Drawing.Size(121, 21);
+            this.cboDrives.Size = new System.Drawing.Size(58, 25);
             this.cboDrives.TabIndex = 11;
             this.cboDrives.SelectedIndexChanged += new System.EventHandler(this.cboDrives_SelectedIndexChanged);
             // 
             // rdbAuthSSO
             // 
+            this.rdbAuthSSO.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.rdbAuthSSO.AutoSize = true;
             this.rdbAuthSSO.Checked = true;
             this.rdbAuthSSO.Depth = 0;
@@ -312,6 +319,7 @@ namespace PSRemotingExplorer
             // 
             // rdbAuthBasic
             // 
+            this.rdbAuthBasic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.rdbAuthBasic.AutoSize = true;
             this.rdbAuthBasic.Depth = 0;
             this.rdbAuthBasic.Font = new System.Drawing.Font("Roboto", 10F);
@@ -329,6 +337,7 @@ namespace PSRemotingExplorer
             // 
             // rdbDefault
             // 
+            this.rdbDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.rdbDefault.AutoSize = true;
             this.rdbDefault.Depth = 0;
             this.rdbDefault.Font = new System.Drawing.Font("Roboto", 10F);
