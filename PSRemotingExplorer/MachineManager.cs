@@ -14,7 +14,7 @@ namespace PSRemotingExplorer
         public int Progress { get; set; }
     }
 
-    public class MachineManager : IManageMachines
+    public class MachineManager
     {
         public event EventHandler<RemoteProgressChangedEventArgs> ProgressChanged;
 
@@ -115,8 +115,38 @@ namespace PSRemotingExplorer
 
         public void RemoveFileFromSession(string filePathOnTargetMachine)
         {
-            const string script = "{ param($path) Remove-Item -Path $path}";
+            const string script = "{ param($path) Remove-Item -Path $path -Recurse -Force }";
             RunScriptUsingSession(script, new[] {filePathOnTargetMachine}, _runspace, _session);
+        }
+
+        public List<string> LoadDirectoriesCommand(string path)
+        {
+            var result = RunScript(
+                "{ param($path) Get-ChildItem -Path $path -Directory | Select-Object -Expand FullName }", new[] { path });
+            var items = new List<string>();
+            foreach (var item in result.ToArray()) items.Add(item.BaseObject.ToString());
+            return items;
+        }
+
+        public List<string> LoadFilesCommand(string path)
+        {
+            var result = RunScript(
+                "{ param($path) Get-ChildItem -Path $path -File | Select-Object -Expand FullName }", new[] { path });
+            var items = new List<string>();
+            foreach (var item in result.ToArray()) items.Add(item.BaseObject.ToString());
+            return items;
+        }
+
+        public List<string> LoadDrives()
+        {
+            var result = RunScript(
+                "{ [System.IO.DriveInfo]::GetDrives() | Where-Object {$_.DriveType -eq 'Fixed'} | Sort-Object -Property Name | Select-Object -Expand Name }");
+            var items = new List<string>();
+            foreach (var item in result.ToArray())
+            {
+                items.Add($"{item.BaseObject}");
+            }
+            return items;
         }
 
         private void ThrowOnError(PowerShell powershell, string attemptedScriptBlock)

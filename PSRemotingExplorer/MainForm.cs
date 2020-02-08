@@ -93,53 +93,70 @@ namespace PSRemotingExplorer
             }
             else
             {
-                //worker.ReportProgress(0);
                 switch (request.Name)
                 {
                     case CommandName.Connect:
-                        ConnectCommand();
+                        var computerName = txtComputerName.Text;
+                        var port = int.Parse(txtPort.Text);
+                        var username = txtUsername.Text;
+                        var password = txtPassword.Text;
+                        if (rdbAuthBasic.Checked)
+                        {
+                            _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Basic);
+                        }
+                        else if (rdbAuthSSO.Checked)
+                        {
+                            _machineManager = new MachineManager(computerName, port);
+                        }
+                        else
+                        {
+                            _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Default);
+                        }
+                        _machineManager.EnterSession();
                         result = new BackgroundResult
                         {
                             Name = CommandName.Connect
                         };
                         break;
                     case CommandName.Disconnect:
-                        DisconnectCommand();
+                        _machineManager?.ExitSession();
                         result = new BackgroundResult
                         {
                             Name = CommandName.Disconnect
                         };
                         break;
                     case CommandName.Upload:
-                        UploadCommand(request.Request[0].ToString(), request.Request[1].ToString());
+                        _machineManager.CopyFileToSession(request.Request[0].ToString(), request.Request[1].ToString());
                         result = new BackgroundResult
                         {
                             Name = CommandName.Upload
                         };
                         break;
                     case CommandName.Download:
-                        DownloadCommand(request.Request[0].ToString(), request.Request[1].ToString());
+                        _machineManager.CopyFileFromSession(request.Request[0].ToString(), request.Request[1].ToString());
                         result = new BackgroundResult
                         {
                             Name = CommandName.Download
                         };
                         break;
                     case CommandName.Delete:
-                        DeleteCommand(request.Request[0].ToString());
+                        _machineManager.RemoveFileFromSession(request.Request[0].ToString());
                         result = new BackgroundResult
                         {
-                            Name = CommandName.Delete
+                            Name = CommandName.Delete,
+                            Result = request.Request[0]
                         };
                         break;
                     case CommandName.Rename:
-                        RenameCommand(request.Request[0].ToString(), request.Request[1].ToString());
+                        _machineManager.RenameFileFromSession(request.Request[0].ToString(), request.Request[1].ToString());
                         result = new BackgroundResult
                         {
-                            Name = CommandName.Rename
+                            Name = CommandName.Rename,
+                            Result = request.Request[0]
                         };
                         break;
                     case CommandName.Extract:
-                        ExtractCommand(request.Request[0].ToString(), request.Request[1].ToString());
+                        _machineManager.ExtractFileFromSession(request.Request[0].ToString(), request.Request[1].ToString());
                         result = new BackgroundResult
                         {
                             Name = CommandName.Extract
@@ -149,21 +166,21 @@ namespace PSRemotingExplorer
                         result = new BackgroundResult
                         {
                             Name = CommandName.RefreshFiles,
-                            Result = LoadFilesCommand(request.Request[0].ToString())
+                            Result = _machineManager.LoadFilesCommand(request.Request[0].ToString())
                         };
                         break;
                     case CommandName.RefreshDirectories:
                         result = new BackgroundResult
                         {
                             Name = CommandName.RefreshDirectories,
-                            Result = LoadDirectoriesCommand(request.Request[0].ToString())
+                            Result = _machineManager.LoadDirectoriesCommand(request.Request[0].ToString())
                         };
                         break;
                     case CommandName.RefreshDrives:
                         result = new BackgroundResult
                         {
                             Name = CommandName.RefreshDrives,
-                            Result = LoadDrives()
+                            Result = _machineManager.LoadDrives()
                         };
                         break;
                     case CommandName.ProgressChanged:
@@ -174,7 +191,6 @@ namespace PSRemotingExplorer
                         };
                         break;
                 }
-                //worker.ReportProgress(100);
             }
 
             return result;
@@ -227,11 +243,18 @@ namespace PSRemotingExplorer
                          result?.Name == CommandName.Extract)
                 {
                     var directory = trvDirectories.SelectedNode.Tag.ToString();
-                    backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+                    if (result?.Result?.ToString() == directory)
                     {
-                        Name = CommandName.RefreshFiles,
-                        Request = new List<object> { directory }
-                    });
+                        trvDirectories.SelectedNode = trvDirectories.SelectedNode.Parent;
+                    }
+                    else
+                    {
+                        backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+                        {
+                            Name = CommandName.RefreshDirectories,
+                            Request = new List<object> { directory }
+                        });
+                    }
                 }
                 else if (result?.Name == CommandName.RefreshFiles)
                 {
@@ -254,7 +277,10 @@ namespace PSRemotingExplorer
                     var driveItems = result.Result as List<string>;
                     PopulateDrives(driveItems.ToArray());
 
-                    this.cboDrives.SelectedIndex = 0;                    
+                    if (driveItems.Any())
+                    {
+                        this.cboDrives.SelectedIndex = 0;
+                    }
                 }
                 else if (result?.Name == CommandName.ProgressChanged)
                 {
@@ -330,46 +356,6 @@ namespace PSRemotingExplorer
             }
         }
 
-        private List<string> LoadDirectoriesCommand(string path)
-        {
-            var result = _machineManager.RunScript(
-                "{ param($path) Get-ChildItem -Path $path -Directory | Select-Object -Expand FullName }", new[] { path });
-            var items = new List<string>();
-            foreach (var item in result.ToArray()) items.Add(item.BaseObject.ToString());
-            return items;
-        }
-
-        private List<string> LoadFilesCommand(string path)
-        {
-            var result = _machineManager.RunScript(
-                "{ param($path) Get-ChildItem -Path $path -File | Select-Object -Expand FullName }", new[] { path });
-            var items = new List<string>();
-            foreach (var item in result.ToArray()) items.Add(item.BaseObject.ToString());
-            return items;
-        }
-
-        private List<string> LoadDrives()
-        {
-            var result = _machineManager.RunScript(
-                "{ Get-Volume | Where-Object { $_.DriveType -eq 'Fixed' -and $_.DriveLetter } | Sort-Object -Property DriveLetter | Select-Object -Expand DriveLetter }");
-            var items = new List<string>();
-            foreach (var item in result.ToArray())
-            {
-                items.Add($"{item.BaseObject.ToString()}:\\");
-            }
-            return items;
-        }
-
-        private void DownloadCommand(string sourcePath, string destinationPath)
-        {
-            _machineManager.CopyFileFromSession(sourcePath, destinationPath);
-        }
-
-        private void UploadCommand(string sourcePath, string destinationPath)
-        {
-            _machineManager.CopyFileToSession(sourcePath, destinationPath);
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             lvFiles.DragDrop += lvFiles_DragDrop;
@@ -411,13 +397,12 @@ namespace PSRemotingExplorer
         {
             if (e.Button == MouseButtons.Right)
             {
-                if (lvFiles.FocusedItem.Bounds.Contains(e.Location))
-                {
-                    var fullname = lvFiles.SelectedItems[0].Tag.ToString();
-                    var extension = Path.GetExtension(fullname);
-                    ctxMenuSelected.Items["extractFileToolStripMenuItem"].Enabled = extension.Is(".zip");
-                    ctxMenuSelected.Show(Cursor.Position);
-                }
+                if (!lvFiles.FocusedItem.Bounds.Contains(e.Location)) return;
+
+                var fullname = lvFiles.SelectedItems[0].Tag.ToString();
+                var extension = Path.GetExtension(fullname);
+                ctxFileMenu.Items["extractFileToolStripMenuItem"].Enabled = extension.Is(".zip");
+                ctxFileMenu.Show(Cursor.Position);
             }
         }
 
@@ -439,36 +424,6 @@ namespace PSRemotingExplorer
             }
         }
 
-        private void ConnectCommand()
-        {
-            var computerName = txtComputerName.Text;
-            var port = int.Parse(txtPort.Text);
-            var username = txtUsername.Text;
-            var password = txtPassword.Text;
-            if (rdbAuthBasic.Checked)
-            {
-                _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Basic);
-            }
-            else if (rdbAuthSSO.Checked)
-            {
-                _machineManager = new MachineManager(computerName, port);
-            }
-            else
-            {
-                _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Default);
-            }
-            _machineManager.EnterSession();
-        }
-
-        private List<string> GetDirectories(string drive)
-        {
-            if (!drive.EndsWith(@"\"))
-            {
-                drive += @"\";
-            }
-            var directoryItems = LoadDirectoriesCommand(drive);
-            return directoryItems;
-        }
         private void btnConnect_Click(object sender, EventArgs e)
         {
             backgroundWorker1.RunWorkerAsync(new BackgroundRequest
@@ -482,11 +437,6 @@ namespace PSRemotingExplorer
             backgroundWorker1.ReportProgress(e.Progress);
         }
 
-        private void DisconnectCommand()
-        {
-            _machineManager?.ExitSession();
-        }
-
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
             backgroundWorker1.RunWorkerAsync(new BackgroundRequest { Name = CommandName.Disconnect });
@@ -497,7 +447,7 @@ namespace PSRemotingExplorer
             if (e.Button == MouseButtons.Right)
             {
                 var htInfo = lvFiles.HitTest(e.Location);
-                if (htInfo.Item == null) ctxMenuDirectory.Show(Cursor.Position);
+                if (htInfo.Item == null) ctxFileMenu2.Show(Cursor.Position);
             }
         }
 
@@ -523,11 +473,6 @@ namespace PSRemotingExplorer
             }
         }
 
-        private void DeleteCommand(string fullname)
-        {
-            _machineManager.RemoveFileFromSession(fullname);
-        }
-
         private void deleteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var fullname = lvFiles.SelectedItems[0].Tag.ToString();
@@ -536,11 +481,6 @@ namespace PSRemotingExplorer
                 Name = CommandName.Delete,
                 Request = new List<object> { fullname }
             });
-        }
-
-        private void ExtractCommand(string filePathOnTargetMachine, string folderPathOnTargetMachine)
-        {
-            _machineManager.ExtractFileFromSession(filePathOnTargetMachine, folderPathOnTargetMachine);
         }
 
         private void extractFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -585,11 +525,6 @@ namespace PSRemotingExplorer
             }
         }
 
-        private void RenameCommand(string filePathOnTargetMachine, string newName)
-        {
-            _machineManager.RenameFileFromSession(filePathOnTargetMachine, newName);
-        }
-
         private void renameFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var fullname = lvFiles.SelectedItems[0].Tag.ToString();
@@ -612,6 +547,54 @@ namespace PSRemotingExplorer
             var drive = cboDrives.SelectedItem.ToString();
 
             InitializeTreeView(drive, new List<string>());
+        }
+
+        private void trvDirectories_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (!trvDirectories.SelectedNode.Bounds.Contains(e.Location) ||
+                    trvDirectories.SelectedNode.Parent == null) return;
+
+                ctxDirectoryMenu.Show(Cursor.Position);
+            }
+        }
+
+        private void deleteDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var directory = trvDirectories.SelectedNode.Tag.ToString();
+            backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+            {
+                Name = CommandName.Delete,
+                Request = new List<object> { directory }
+            });
+        }
+
+        private void trvDirectories_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                var directory = trvDirectories.SelectedNode.Tag.ToString();
+                backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+                {
+                    Name = CommandName.Delete,
+                    Request = new List<object> { directory }
+                });
+            }
+            else if (e.KeyCode == Keys.F2)
+            {
+                var directory = trvDirectories.SelectedNode.Tag.ToString();
+                var newname = Path.GetFileName(directory);
+                var response = Interaction.InputBox("What is the new name?", "Rename Item", newname);
+                if (string.IsNullOrEmpty(response)) return;
+                newname = response;
+
+                backgroundWorker1.RunWorkerAsync(new BackgroundRequest
+                {
+                    Name = CommandName.Rename,
+                    Request = new List<object> { directory, newname }
+                });
+            }
         }
     }
 }

@@ -41,14 +41,14 @@ namespace PSRemotingExplorer
             this.txtPort = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.txtComputerName = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.ctxMenuSelected = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxFileMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.downloadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.extractFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ctxMenuDirectory = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxFileMenu2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.materialProgressBar1 = new MaterialSkin.Controls.MaterialProgressBar();
@@ -56,8 +56,11 @@ namespace PSRemotingExplorer
             this.rdbAuthSSO = new MaterialSkin.Controls.MaterialRadioButton();
             this.rdbAuthBasic = new MaterialSkin.Controls.MaterialRadioButton();
             this.rdbDefault = new MaterialSkin.Controls.MaterialRadioButton();
-            this.ctxMenuSelected.SuspendLayout();
-            this.ctxMenuDirectory.SuspendLayout();
+            this.ctxDirectoryMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxFileMenu.SuspendLayout();
+            this.ctxFileMenu2.SuspendLayout();
+            this.ctxDirectoryMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // trvDirectories
@@ -71,6 +74,8 @@ namespace PSRemotingExplorer
             this.trvDirectories.Size = new System.Drawing.Size(312, 476);
             this.trvDirectories.TabIndex = 0;
             this.trvDirectories.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvDirectories_AfterSelect);
+            this.trvDirectories.KeyUp += new System.Windows.Forms.KeyEventHandler(this.trvDirectories_KeyUp);
+            this.trvDirectories.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trvDirectories_MouseClick);
             // 
             // lvFiles
             // 
@@ -199,68 +204,69 @@ namespace PSRemotingExplorer
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // ctxMenuSelected
+            // ctxFileMenu
             // 
-            this.ctxMenuSelected.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxFileMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.downloadFileToolStripMenuItem,
             this.toolStripSeparator1,
             this.deleteFileToolStripMenuItem,
             this.renameFileToolStripMenuItem,
             this.toolStripSeparator2,
             this.extractFileToolStripMenuItem});
-            this.ctxMenuSelected.Name = "contextMenuStrip1";
-            this.ctxMenuSelected.Size = new System.Drawing.Size(148, 104);
+            this.ctxFileMenu.Name = "contextMenuStrip1";
+            this.ctxFileMenu.Size = new System.Drawing.Size(129, 104);
             // 
             // downloadFileToolStripMenuItem
             // 
             this.downloadFileToolStripMenuItem.Name = "downloadFileToolStripMenuItem";
-            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.downloadFileToolStripMenuItem.Text = "Download file";
+            this.downloadFileToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.downloadFileToolStripMenuItem.Text = "Download";
             this.downloadFileToolStripMenuItem.Click += new System.EventHandler(this.downloadFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(125, 6);
             // 
             // deleteFileToolStripMenuItem
             // 
             this.deleteFileToolStripMenuItem.Name = "deleteFileToolStripMenuItem";
-            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.deleteFileToolStripMenuItem.Text = "Delete file";
+            this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.deleteFileToolStripMenuItem.Text = "Delete";
             this.deleteFileToolStripMenuItem.Click += new System.EventHandler(this.deleteFileToolStripMenuItem_Click);
             // 
             // renameFileToolStripMenuItem
             // 
             this.renameFileToolStripMenuItem.Name = "renameFileToolStripMenuItem";
-            this.renameFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.renameFileToolStripMenuItem.Text = "Rename file";
+            this.renameFileToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.renameFileToolStripMenuItem.Text = "Rename";
             this.renameFileToolStripMenuItem.Click += new System.EventHandler(this.renameFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(125, 6);
             // 
             // extractFileToolStripMenuItem
             // 
             this.extractFileToolStripMenuItem.Name = "extractFileToolStripMenuItem";
-            this.extractFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.extractFileToolStripMenuItem.Text = "Extract file";
+            this.extractFileToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.extractFileToolStripMenuItem.Text = "Extract";
             this.extractFileToolStripMenuItem.Click += new System.EventHandler(this.extractFileToolStripMenuItem_Click);
             // 
-            // ctxMenuDirectory
+            // ctxFileMenu2
             // 
-            this.ctxMenuDirectory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxFileMenu2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.ctxFileMenu2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.uploadFileToolStripMenuItem});
-            this.ctxMenuDirectory.Name = "ctxMenuDirectory";
-            this.ctxMenuDirectory.Size = new System.Drawing.Size(134, 26);
+            this.ctxFileMenu2.Name = "ctxMenuDirectory";
+            this.ctxFileMenu2.Size = new System.Drawing.Size(113, 26);
             // 
             // uploadFileToolStripMenuItem
             // 
             this.uploadFileToolStripMenuItem.Name = "uploadFileToolStripMenuItem";
-            this.uploadFileToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.uploadFileToolStripMenuItem.Text = "Upload File";
+            this.uploadFileToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.uploadFileToolStripMenuItem.Text = "Upload";
             this.uploadFileToolStripMenuItem.Click += new System.EventHandler(this.uploadFileToolStripMenuItem_Click);
             // 
             // backgroundWorker1
@@ -338,6 +344,21 @@ namespace PSRemotingExplorer
             this.rdbDefault.Text = "Default";
             this.rdbDefault.UseVisualStyleBackColor = true;
             // 
+            // ctxDirectoryMenu
+            // 
+            this.ctxDirectoryMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.ctxDirectoryMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteDirectoryToolStripMenuItem});
+            this.ctxDirectoryMenu.Name = "ctxDirectoryMenu";
+            this.ctxDirectoryMenu.Size = new System.Drawing.Size(108, 26);
+            // 
+            // deleteDirectoryToolStripMenuItem
+            // 
+            this.deleteDirectoryToolStripMenuItem.Name = "deleteDirectoryToolStripMenuItem";
+            this.deleteDirectoryToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.deleteDirectoryToolStripMenuItem.Text = "Delete";
+            this.deleteDirectoryToolStripMenuItem.Click += new System.EventHandler(this.deleteDirectoryToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -360,8 +381,9 @@ namespace PSRemotingExplorer
             this.Name = "MainForm";
             this.Text = "PS Remoting Explorer";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.ctxMenuSelected.ResumeLayout(false);
-            this.ctxMenuDirectory.ResumeLayout(false);
+            this.ctxFileMenu.ResumeLayout(false);
+            this.ctxFileMenu2.ResumeLayout(false);
+            this.ctxDirectoryMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -371,7 +393,7 @@ namespace PSRemotingExplorer
         private System.Windows.Forms.TreeView trvDirectories;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ListView lvFiles;
-        private System.Windows.Forms.ContextMenuStrip ctxMenuSelected;
+        private System.Windows.Forms.ContextMenuStrip ctxFileMenu;
         private System.Windows.Forms.ToolStripMenuItem downloadFileToolStripMenuItem;
         private MaterialSkin.Controls.MaterialSingleLineTextField txtComputerName;
         private MaterialSkin.Controls.MaterialSingleLineTextField txtPort;
@@ -379,7 +401,7 @@ namespace PSRemotingExplorer
         private MaterialSkin.Controls.MaterialSingleLineTextField txtUsername;
         private MaterialSkin.Controls.MaterialSingleLineTextField txtPassword;
         private MaterialRaisedButton btnDisconnect;
-        private System.Windows.Forms.ContextMenuStrip ctxMenuDirectory;
+        private System.Windows.Forms.ContextMenuStrip ctxFileMenu2;
         private System.Windows.Forms.ToolStripMenuItem uploadFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extractFileToolStripMenuItem;
@@ -392,6 +414,8 @@ namespace PSRemotingExplorer
         private MaterialRadioButton rdbAuthSSO;
         private MaterialRadioButton rdbAuthBasic;
         private MaterialRadioButton rdbDefault;
+        private System.Windows.Forms.ContextMenuStrip ctxDirectoryMenu;
+        private System.Windows.Forms.ToolStripMenuItem deleteDirectoryToolStripMenuItem;
     }
 }
 
