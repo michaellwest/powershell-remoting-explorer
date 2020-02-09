@@ -105,7 +105,7 @@ namespace PSRemotingExplorer
             this.btnConnection.Name = "btnConnection";
             this.btnConnection.Primary = true;
             this.btnConnection.Size = new System.Drawing.Size(84, 36);
-            this.btnConnection.TabIndex = 3;
+            this.btnConnection.TabIndex = 8;
             this.btnConnection.Text = "Connect";
             this.btnConnection.UseVisualStyleBackColor = true;
             this.btnConnection.Click += new System.EventHandler(this.btnConnection_Click);
@@ -123,7 +123,7 @@ namespace PSRemotingExplorer
             this.txtPassword.SelectionLength = 0;
             this.txtPassword.SelectionStart = 0;
             this.txtPassword.Size = new System.Drawing.Size(189, 23);
-            this.txtPassword.TabIndex = 5;
+            this.txtPassword.TabIndex = 4;
             this.txtPassword.TabStop = false;
             this.txtPassword.UseSystemPasswordChar = true;
             // 
@@ -140,7 +140,7 @@ namespace PSRemotingExplorer
             this.txtUsername.SelectionLength = 0;
             this.txtUsername.SelectionStart = 0;
             this.txtUsername.Size = new System.Drawing.Size(184, 23);
-            this.txtUsername.TabIndex = 4;
+            this.txtUsername.TabIndex = 3;
             this.txtUsername.TabStop = false;
             this.txtUsername.UseSystemPasswordChar = false;
             // 
@@ -157,7 +157,7 @@ namespace PSRemotingExplorer
             this.txtPort.SelectionLength = 0;
             this.txtPort.SelectionStart = 0;
             this.txtPort.Size = new System.Drawing.Size(97, 23);
-            this.txtPort.TabIndex = 2;
+            this.txtPort.TabIndex = 6;
             this.txtPort.TabStop = false;
             this.txtPort.UseSystemPasswordChar = false;
             this.txtPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPort_KeyPress);
@@ -175,7 +175,7 @@ namespace PSRemotingExplorer
             this.txtComputerName.SelectionLength = 0;
             this.txtComputerName.SelectionStart = 0;
             this.txtComputerName.Size = new System.Drawing.Size(161, 23);
-            this.txtComputerName.TabIndex = 1;
+            this.txtComputerName.TabIndex = 5;
             this.txtComputerName.TabStop = false;
             this.txtComputerName.UseSystemPasswordChar = false;
             // 
@@ -273,7 +273,7 @@ namespace PSRemotingExplorer
             this.cboDrives.Location = new System.Drawing.Point(438, 108);
             this.cboDrives.Name = "cboDrives";
             this.cboDrives.Size = new System.Drawing.Size(58, 25);
-            this.cboDrives.TabIndex = 11;
+            this.cboDrives.TabIndex = 7;
             this.cboDrives.SelectedIndexChanged += new System.EventHandler(this.cboDrives_SelectedIndexChanged);
             // 
             // rdbAuthSSO
@@ -288,7 +288,7 @@ namespace PSRemotingExplorer
             this.rdbAuthSSO.Name = "rdbAuthSSO";
             this.rdbAuthSSO.Ripple = true;
             this.rdbAuthSSO.Size = new System.Drawing.Size(118, 30);
-            this.rdbAuthSSO.TabIndex = 12;
+            this.rdbAuthSSO.TabIndex = 1;
             this.rdbAuthSSO.Text = "Single Sign On";
             this.rdbAuthSSO.UseVisualStyleBackColor = true;
             // 
@@ -305,7 +305,7 @@ namespace PSRemotingExplorer
             this.rdbAuthBasic.Name = "rdbAuthBasic";
             this.rdbAuthBasic.Ripple = true;
             this.rdbAuthBasic.Size = new System.Drawing.Size(63, 30);
-            this.rdbAuthBasic.TabIndex = 14;
+            this.rdbAuthBasic.TabIndex = 2;
             this.rdbAuthBasic.TabStop = true;
             this.rdbAuthBasic.Text = "Basic";
             this.rdbAuthBasic.UseVisualStyleBackColor = true;
@@ -337,7 +337,7 @@ namespace PSRemotingExplorer
             this.btnSaveConnection.Name = "btnSaveConnection";
             this.btnSaveConnection.Primary = false;
             this.btnSaveConnection.Size = new System.Drawing.Size(145, 36);
-            this.btnSaveConnection.TabIndex = 17;
+            this.btnSaveConnection.TabIndex = 9;
             this.btnSaveConnection.Text = "Save Connection";
             this.btnSaveConnection.UseVisualStyleBackColor = true;
             this.btnSaveConnection.Click += new System.EventHandler(this.btnSaveConnection_Click);
