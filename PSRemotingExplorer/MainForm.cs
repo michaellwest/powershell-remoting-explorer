@@ -105,13 +105,17 @@ namespace PSRemotingExplorer
                         {
                             _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Basic);
                         }
-                        else if (rdbAuthSSO.Checked)
-                        {
-                            _machineManager = new MachineManager(computerName, port);
-                        }
                         else
                         {
-                            _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Default);
+                            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                            {
+                                _machineManager = new MachineManager(computerName, port);
+                            }
+                            else
+                            {
+                                _machineManager = new MachineManager(computerName, port, username, password.ToSecureString(), AuthenticationMechanism.Default);
+                            }
+
                         }
                         _machineManager.EnterSession();
                         result = new BackgroundResult
@@ -611,10 +615,6 @@ namespace PSRemotingExplorer
                 Connection.Default.Authentication = AuthenticationMechanism.Basic.ToString();
             }
             else if (rdbAuthSSO.Checked)
-            {
-                Connection.Default.Authentication = AuthenticationMechanism.NegotiateWithImplicitCredential.ToString();
-            }
-            else if (rdbDefault.Checked)
             {
                 Connection.Default.Authentication = AuthenticationMechanism.Default.ToString();
             }

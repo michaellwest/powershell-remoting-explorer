@@ -1,4 +1,4 @@
-﻿using MaterialSkin.Controls;
+using MaterialSkin.Controls;
 
 namespace PSRemotingExplorer
 {
@@ -54,7 +54,6 @@ namespace PSRemotingExplorer
             this.cboDrives = new System.Windows.Forms.ComboBox();
             this.rdbAuthSSO = new MaterialSkin.Controls.MaterialRadioButton();
             this.rdbAuthBasic = new MaterialSkin.Controls.MaterialRadioButton();
-            this.rdbDefault = new MaterialSkin.Controls.MaterialRadioButton();
             this.ctxDirectoryMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSaveConnection = new MaterialSkin.Controls.MaterialFlatButton();
@@ -68,7 +67,7 @@ namespace PSRemotingExplorer
             this.trvDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trvDirectories.Font = new System.Drawing.Font("Roboto", 10F);
+            this.trvDirectories.Font = new System.Drawing.Font("Roboto", 11F);
             this.trvDirectories.HideSelection = false;
             this.trvDirectories.Location = new System.Drawing.Point(12, 184);
             this.trvDirectories.Name = "trvDirectories";
@@ -82,7 +81,7 @@ namespace PSRemotingExplorer
             // 
             this.lvFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvFiles.Font = new System.Drawing.Font("Roboto", 10F);
+            this.lvFiles.Font = new System.Drawing.Font("Roboto", 11F);
             this.lvFiles.HideSelection = false;
             this.lvFiles.Location = new System.Drawing.Point(326, 184);
             this.lvFiles.MultiSelect = false;
@@ -123,7 +122,7 @@ namespace PSRemotingExplorer
             this.txtPassword.SelectedText = "";
             this.txtPassword.SelectionLength = 0;
             this.txtPassword.SelectionStart = 0;
-            this.txtPassword.Size = new System.Drawing.Size(147, 23);
+            this.txtPassword.Size = new System.Drawing.Size(189, 23);
             this.txtPassword.TabIndex = 5;
             this.txtPassword.TabStop = false;
             this.txtPassword.UseSystemPasswordChar = true;
@@ -140,7 +139,7 @@ namespace PSRemotingExplorer
             this.txtUsername.SelectedText = "";
             this.txtUsername.SelectionLength = 0;
             this.txtUsername.SelectionStart = 0;
-            this.txtUsername.Size = new System.Drawing.Size(147, 23);
+            this.txtUsername.Size = new System.Drawing.Size(184, 23);
             this.txtUsername.TabIndex = 4;
             this.txtUsername.TabStop = false;
             this.txtUsername.UseSystemPasswordChar = false;
@@ -149,7 +148,7 @@ namespace PSRemotingExplorer
             // 
             this.txtPort.Depth = 0;
             this.txtPort.Hint = "Port";
-            this.txtPort.Location = new System.Drawing.Point(293, 109);
+            this.txtPort.Location = new System.Drawing.Point(335, 109);
             this.txtPort.MaxLength = 5;
             this.txtPort.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtPort.Name = "txtPort";
@@ -167,7 +166,7 @@ namespace PSRemotingExplorer
             // 
             this.txtComputerName.Depth = 0;
             this.txtComputerName.Hint = "ComputerName";
-            this.txtComputerName.Location = new System.Drawing.Point(293, 79);
+            this.txtComputerName.Location = new System.Drawing.Point(335, 79);
             this.txtComputerName.MaxLength = 32767;
             this.txtComputerName.MouseState = MaterialSkin.MouseState.HOVER;
             this.txtComputerName.Name = "txtComputerName";
@@ -258,7 +257,8 @@ namespace PSRemotingExplorer
             // 
             // materialProgressBar1
             // 
-            this.materialProgressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialProgressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.materialProgressBar1.Depth = 0;
             this.materialProgressBar1.Location = new System.Drawing.Point(12, 173);
             this.materialProgressBar1.MouseState = MaterialSkin.MouseState.HOVER;
@@ -270,7 +270,7 @@ namespace PSRemotingExplorer
             // 
             this.cboDrives.Font = new System.Drawing.Font("Roboto", 10F);
             this.cboDrives.FormattingEnabled = true;
-            this.cboDrives.Location = new System.Drawing.Point(396, 108);
+            this.cboDrives.Location = new System.Drawing.Point(438, 108);
             this.cboDrives.Name = "cboDrives";
             this.cboDrives.Size = new System.Drawing.Size(58, 25);
             this.cboDrives.TabIndex = 11;
@@ -310,22 +310,6 @@ namespace PSRemotingExplorer
             this.rdbAuthBasic.Text = "Basic";
             this.rdbAuthBasic.UseVisualStyleBackColor = true;
             // 
-            // rdbDefault
-            // 
-            this.rdbDefault.AutoSize = true;
-            this.rdbDefault.Depth = 0;
-            this.rdbDefault.Font = new System.Drawing.Font("Roboto", 10F);
-            this.rdbDefault.Location = new System.Drawing.Point(9, 133);
-            this.rdbDefault.Margin = new System.Windows.Forms.Padding(0);
-            this.rdbDefault.MouseLocation = new System.Drawing.Point(-1, -1);
-            this.rdbDefault.MouseState = MaterialSkin.MouseState.HOVER;
-            this.rdbDefault.Name = "rdbDefault";
-            this.rdbDefault.Ripple = true;
-            this.rdbDefault.Size = new System.Drawing.Size(73, 30);
-            this.rdbDefault.TabIndex = 15;
-            this.rdbDefault.Text = "Default";
-            this.rdbDefault.UseVisualStyleBackColor = true;
-            // 
             // ctxDirectoryMenu
             // 
             this.ctxDirectoryMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
@@ -347,7 +331,7 @@ namespace PSRemotingExplorer
             this.btnSaveConnection.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSaveConnection.Depth = 0;
             this.btnSaveConnection.Icon = null;
-            this.btnSaveConnection.Location = new System.Drawing.Point(310, 134);
+            this.btnSaveConnection.Location = new System.Drawing.Point(3, 134);
             this.btnSaveConnection.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnSaveConnection.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnSaveConnection.Name = "btnSaveConnection";
@@ -364,7 +348,6 @@ namespace PSRemotingExplorer
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 688);
             this.Controls.Add(this.btnSaveConnection);
-            this.Controls.Add(this.rdbDefault);
             this.Controls.Add(this.rdbAuthBasic);
             this.Controls.Add(this.rdbAuthSSO);
             this.Controls.Add(this.cboDrives);
@@ -411,7 +394,6 @@ namespace PSRemotingExplorer
         private System.Windows.Forms.ComboBox cboDrives;
         private MaterialRadioButton rdbAuthSSO;
         private MaterialRadioButton rdbAuthBasic;
-        private MaterialRadioButton rdbDefault;
         private System.Windows.Forms.ContextMenuStrip ctxDirectoryMenu;
         private System.Windows.Forms.ToolStripMenuItem deleteDirectoryToolStripMenuItem;
         private MaterialFlatButton btnSaveConnection;
