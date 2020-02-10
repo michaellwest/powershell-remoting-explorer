@@ -8,3 +8,8 @@ services:
       - 55985:5985
     volumes:
       - .\startup:C:\startup
+
+networks:
+  default:
+    external:
+      name: nat

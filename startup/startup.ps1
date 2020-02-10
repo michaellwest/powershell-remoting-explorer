@@ -8,4 +8,5 @@ net localgroup Administrators PSRemotingUser /add
 
 while ($true) {
     Test-Connection -ComputerName 127.0.0.1 > $null
+    Start-Sleep -Seconds 1
 }
