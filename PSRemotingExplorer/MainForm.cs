@@ -164,7 +164,8 @@ namespace PSRemotingExplorer
                         _machineManager.ExtractFileFromSession(request.Request[0].ToString(), request.Request[1].ToString());
                         result = new BackgroundResult
                         {
-                            Name = CommandName.Extract
+                            Name = CommandName.Extract,
+                            Result = request.Request[0]
                         };
                         break;
                     case CommandName.RefreshFiles:
@@ -267,6 +268,7 @@ namespace PSRemotingExplorer
                 else if (result?.Name == CommandName.RefreshDirectories)
                 {
                     var directoryItems = result.Result as List<string>;
+                    this.trvDirectories.SelectedNode.Nodes.Clear();
                     AddTreeNodes(this.trvDirectories.SelectedNode, directoryItems);
 
                     backgroundWorker1.RunWorkerAsync(new BackgroundRequest
