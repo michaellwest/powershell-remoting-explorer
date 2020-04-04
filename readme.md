@@ -4,6 +4,34 @@
 
 The following steps will help you get started working against a demo Docker container. If you have other servers setup such as on a domain then skip ahead.
 
+* Ensure PS Remoting is enabled on the host machine (the machine running the Remoting Explorer tool)
+  * `Enable-PSRemoting` - used to enable remoting on the host machine
+  * `winrm get winrm/config/client` - check if basic authentication is allowed
+  * ` winrm set winrm/config/client/auth @{Basic="true"}` - enable basic authentication
+  * `winrm set winrm/config/client @{AllowUnencrypted="true"}` - allow unencrypted traffic from the host to the container or VM
+  * `winrm set winrm/config/client @{TrustedHosts="*"}` - trust every machine you try to connect to (use with caution)
+
+* You might end up with something like the following:
+
+```
+PS C:\WINDOWS\system32> winrm get winrm/config/client
+Client
+    NetworkDelayms = 5000
+    URLPrefix = wsman
+    AllowUnencrypted = true
+    Auth
+        Basic = true
+        Digest = true
+        Kerberos = true
+        Negotiate = true
+        Certificate = true
+        CredSSP = false
+    DefaultPorts
+        HTTP = 5985
+        HTTPS = 5986
+    TrustedHosts = *
+```
+
 * Run a neverending Windows container : `docker-compose up -d`
 * Run the PSRemotingExplorer and connect.
 
