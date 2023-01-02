@@ -9,7 +9,7 @@ The following steps will help you get started working against a demo Docker cont
   * `winrm get winrm/config/client` - check if basic authentication is allowed
   * ` winrm set winrm/config/client/auth @{Basic="true"}` - enable basic authentication
   * `winrm set winrm/config/client @{AllowUnencrypted="true"}` - allow unencrypted traffic from the host to the container or VM
-  * `winrm set winrm/config/client @{TrustedHosts="*"}` - trust every machine you try to connect to (use with caution)
+  * `winrm set winrm/config/client '@{TrustedHosts="*"}'` - trust every machine you try to connect to (use with caution)
 
 * You might end up with something like the following:
 
